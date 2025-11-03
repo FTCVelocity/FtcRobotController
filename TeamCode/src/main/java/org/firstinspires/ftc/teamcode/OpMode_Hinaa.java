@@ -13,9 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-public class OpMode_Hinaa {
-    private DcMotor frontright, backright, frontleft, backleft;
-}
+
 /* Copyright (c) 2021 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -61,7 +59,7 @@ public class OpMode_Hinaa {
 
 @TeleOp(name="OpMode_Hinaa", group="OpMode")
 @Disabled
-public class OpMode_Hinaa extends OpMode {
+public class OpMode_Hinaa extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();

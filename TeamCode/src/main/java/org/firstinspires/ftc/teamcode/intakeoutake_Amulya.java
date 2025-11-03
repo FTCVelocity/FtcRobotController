@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 //import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 //import com.qualcomm.robotcore.util.ElapsedTime;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp
-public class intakeoutake_Amulya {
+public class intakeoutake_Amulya extends LinearOpMode {
 
     // INSTANTIATE MOTORS AND SERVOS
     private CRServo intake;
@@ -27,7 +28,7 @@ public class intakeoutake_Amulya {
         lastBump = false;
     }
 
-    public void GAMEPAD_INPUT_TOGGLE(Gamepad gamepad2, Telemetry telemetry) {
+    public void GAMEPAD_INPUT_TOGGLE() {
         // Toggle claw position when right_bumper is pressed
         telemetry.addData("lastBump - preOp", lastBump);
         if (gamepad2.right_bumper && !lastBump) {
@@ -46,7 +47,7 @@ public class intakeoutake_Amulya {
         telemetry.update();
     }
 
-    public void GAMEPAD_INTAKE(Gamepad gamepad2, Telemetry telemetry) {
+    public void GAMEPAD_INTAKE() {
         // Control intake servo with triggers
         if (gamepad2.right_trigger > 0.1) {
             intake.setPower(1.0);
@@ -57,4 +58,13 @@ public class intakeoutake_Amulya {
         }
     }
 
+    @Override
+    public void runOpMode() throws InterruptedException {
+        waitForStart();
+
+        while(opModeIsActive()) {
+            GAMEPAD_INPUT_TOGGLE();
+            GAMEPAD_INTAKE();
+        }
+    }
 }

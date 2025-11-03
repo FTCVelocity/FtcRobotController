@@ -18,9 +18,6 @@ public class intakeoutake_Amulya {
     private boolean clawOpen = true;
     private boolean lastBump = false;
 
-    //creating the hardware map
-    HardwareMap hardwareMap;
-
     public void init(HardwareMap hardwareMap) {
         intake = hardwareMap.get(CRServo.class, "intake");
         claw = hardwareMap.get(Servo.class, "claw");

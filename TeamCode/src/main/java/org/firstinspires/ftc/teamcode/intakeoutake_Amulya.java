@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 //import com.qualcomm.robotcore.hardware.Servo;
 
 
-public class intakeoutake_Amulya {
+public class intakeoutake_Amulya extends com.qualcomm.robotcore.eventloop.opmode.LinearOpMode {
 
     // INSTANTIATE MOTORS AND SERVOS
     private DcMotor intake;

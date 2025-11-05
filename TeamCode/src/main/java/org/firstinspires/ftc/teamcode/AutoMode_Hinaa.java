@@ -1,0 +1,402 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+@Autonomous(name="AutoMode_Hinaa", group="Robot")
+public class AutoMode_Hinaa extends LinearOpMode {
+
+    // Declare motors
+    private DcMotor frontleft, frontright, backleft, backright;
+    private ElapsedTime runtime = new ElapsedTime();
+
+    // Encoder constants
+    static final double COUNTS_PER_MOTOR_REV = 383.6; // GoBilda 5202/5203 motor encoder counts
+    static final double DRIVE_GEAR_REDUCTION = 1.0;
+    static final double WHEEL_DIAMETER_INCHES = 4.0;
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double DRIVE_SPEED = 0.5;
+
+    @Override
+    public void runOpMode() {
+
+        // Initialize hardware
+        frontleft  = hardwareMap.get(DcMotor.class, "frontleft");
+        frontright = hardwareMap.get(DcMotor.class, "frontright");
+        backleft   = hardwareMap.get(DcMotor.class, "backleft");
+        backright  = hardwareMap.get(DcMotor.class, "backright");
+
+        // Set motor directions (adjust if needed)
+        frontleft.setDirection(DcMotor.Direction.REVERSE);
+        backleft.setDirection(DcMotor.Direction.REVERSE);
+        frontright.setDirection(DcMotor.Direction.FORWARD);
+        backright.setDirection(DcMotor.Direction.FORWARD);
+
+        // Reset encoders
+        frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        telemetry.addLine("Initialized. Ready to start!");
+        telemetry.update();
+
+        waitForStart();
+
+        // Step 1: Drive forward 8 inches
+        encoderDrive(DRIVE_SPEED, 8, 8, 4.0);
+
+        // Step 2: Drive backward 8 inches
+        encoderDrive(DRIVE_SPEED, -8, -8, 4.0);
+
+        // Step 3: Strafe right 8 inches
+        encoderStrafe(DRIVE_SPEED, 8, 4.0);
+
+        telemetry.addLine("Auto Complete!");
+        telemetry.update();
+        sleep(1000);
+    }
+
+    /** Drive forward or backward */
+    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
+        int newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget;
+
+        if (opModeIsActive()) {
+            // Calculate target positions
+            newFrontLeftTarget = frontleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newFrontRightTarget = frontright.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newBackLeftTarget = backleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newBackRightTarget = backright.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+
+            // Set targets
+            frontleft.setTargetPosition(newFrontLeftTarget);
+            frontright.setTargetPosition(newFrontRightTarget);
+            backleft.setTargetPosition(newBackLeftTarget);
+            backright.setTargetPosition(newBackRightTarget);
+
+            // Run to position
+            frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // Start motion
+            runtime.reset();
+            setAllMotorPower(Math.abs(speed));
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (frontleft.isBusy() && frontright.isBusy() && backleft.isBusy() && backright.isBusy())) {
+                telemetry.addData("Driving", "FL:%d FR:%d BL:%d BR:%d",
+                        frontleft.getCurrentPosition(),
+                        frontright.getCurrentPosition(),
+                        backleft.getCurrentPosition(),
+                        backright.getCurrentPosition());
+                telemetry.update();
+            }
+
+            stopAllMotors();
+        }
+    }
+
+    /** Strafe right (negative inches = left) */
+    public void encoderStrafe(double speed, double inches, double timeoutS) {
+        int newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget;
+
+        if (opModeIsActive()) {
+            // Strafing: opposite wheel pairs move opposite directions
+            newFrontLeftTarget = frontleft.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+            newFrontRightTarget = frontright.getCurrentPosition() - (int)(inches * COUNTS_PER_INCH);
+            newBackLeftTarget = backleft.getCurrentPosition() - (int)(inches * COUNTS_PER_INCH);
+            newBackRightTarget = backright.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
+
+            // Set targets
+            frontleft.setTargetPosition(newFrontLeftTarget);
+            frontright.setTargetPosition(newFrontRightTarget);
+            backleft.setTargetPosition(newBackLeftTarget);
+            backright.setTargetPosition(newBackRightTarget);
+
+            // Run to position
+            frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            runtime.reset();
+            setAllMotorPower(Math.abs(speed));
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (frontleft.isBusy() && frontright.isBusy() && backleft.isBusy() && backright.isBusy())) {
+                telemetry.addData("Strafing", "FL:%d FR:%d BL:%d BR:%d",
+                        frontleft.getCurrentPosition(),
+                        frontright.getCurrentPosition(),
+                        backleft.getCurrentPosition(),
+                        backright.getCurrentPosition());
+                telemetry.update();
+            }
+
+            stopAllMotors();
+        }
+    }
+
+    private void setAllMotorPower(double power) {
+        frontleft.setPower(power);
+        frontright.setPower(power);
+        backleft.setPower(power);
+        backright.setPower(power);
+    }
+
+    private void stopAllMotors() {
+        frontleft.setPower(0);
+        frontright.setPower(0);
+        backleft.setPower(0);
+        backright.setPower(0);
+
+        frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        sleep(250);
+    }
+}
+
+
+/*
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+ Copyright (c) 2017 FIRST. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted (subject to the limitations in the disclaimer below) provided that
+ * the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list
+ * of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of FIRST nor the names of its contributors may be used to endorse or
+ * promote products derived from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+ * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+
+ * This OpMode illustrates the concept of driving a path based on encoder counts.
+ * The code is structured as a LinearOpMode
+ *
+ * The code REQUIRES that you DO have encoders on the wheels,
+ *   otherwise you would use: RobotAutoDriveByTime;
+ *
+ *  This code ALSO requires that the drive Motors have been configured such that a positive
+ *  power command moves them forward, and causes the encoders to count UP.
+ *
+ *   The desired path in this example is:
+ *   - Drive forward for 48 inches
+ *   - Spin right for 12 Inches
+ *   - Drive Backward for 24 inches
+ *   - Stop and close the claw.
+ *
+ *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
+ *  that performs the actual movement.
+ *  This method assumes that each movement is relative to the last stopping place.
+ *  There are other ways to perform encoder based moves, but this method is probably the simplest.
+ *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
+ *
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
+
+
+@Autonomous(name="AutoMode_Hinaa", group="Robot")
+//@Disabled
+public class AutoMode_Hinaa extends LinearOpMode {
+
+     Declare OpMode members.
+    private DcMotor intake;
+    private DcMotor outtakeleft;
+    private DcMotor outtakeright;
+    private DcMotor frontleft   = null;
+    private DcMotor frontright  = null;
+    private DcMotor backleft  = null;
+    private DcMotor backright  = null;
+
+    private ElapsedTime runtime = new ElapsedTime();
+
+    // Calculate the COUNTS_PER_INCH for your specific drive train.
+    // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
+    // For external drive gearing, set DRIVE_GEAR_REDUCTION as needed.
+    // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
+    // This is gearing DOWN for less speed and more torque.
+    // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
+    static final double     COUNTS_PER_MOTOR_REV    = 383.6 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.6;
+    static final double     TURN_SPEED              = 0.5;
+
+    @Override
+    public void runOpMode() {
+
+        // Initialize the drive system variables.
+        frontleft  = hardwareMap.get(DcMotor.class, "frontleft");
+        frontright = hardwareMap.get(DcMotor.class, "frontright");
+        backleft = hardwareMap.get(DcMotor.class, "backleft");
+        backright = hardwareMap.get(DcMotor.class, "backright");
+
+
+        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
+        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
+        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        frontleft.setDirection(DcMotor.Direction.REVERSE);
+        backleft.setDirection(DcMotor.Direction.REVERSE);
+        frontright.setDirection(DcMotor.Direction.FORWARD);
+        backright.setDirection(DcMotor.Direction.FORWARD);
+
+
+        frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Send telemetry message to indicate successful Encoder reset
+        telemetry.addData("Starting at",  "%7d :%7d",
+                frontleft.getCurrentPosition(),
+                frontright.getCurrentPosition(),
+                backleft.getCurrentPosition(),
+                backright.getCurrentPosition());
+        telemetry.update();
+
+        // Wait for the game to start (driver presses START)
+        waitForStart();
+
+        // Step through each leg of the path,
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        encoderDrive(DRIVE_SPEED,  3,  3, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(TURN_SPEED,   3, -3, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED, -3, -3, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+        sleep(1000);  // pause to display final telemetry message.
+    }
+
+
+     *  Method to perform a relative move, based on encoder counts.
+     *  Encoders are not reset as the move is based on the current position.
+     *  Move will stop if any of three conditions occur:
+     *  1) Move gets to the desired position
+     *  2) Move runs out of time
+     *  3) Driver stops the OpMode running.
+
+    public void encoderDrive(double speed,
+                             double leftInches, double rightInches,
+                             double timeoutS) {
+        int newfrontleftTarget;
+        int newfrontrightTarget;
+        int newbackleftTarget;
+        int newbackrightTarget;
+
+        // Ensure that the OpMode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newfrontleftTarget = frontleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newfrontrightTarget = frontright.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newbackleftTarget = backleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newbackrightTarget = backright.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            frontleft.setTargetPosition(newfrontleftTarget);
+            frontright.setTargetPosition(newfrontrightTarget);
+            backleft.setTargetPosition(newbackleftTarget);
+            backright.setTargetPosition(newbackrightTarget);
+
+            // Turn On RUN_TO_POSITION
+            frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            frontleft.setPower(Math.abs(speed));
+            frontright.setPower(Math.abs(speed));
+            backleft.setPower(Math.abs(speed));
+            backright.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (frontleft.isBusy() && frontright.isBusy() &&
+                            backleft.isBusy() && backright.isBusy())) {
+
+
+                // Display it for the driver.
+                telemetry.addData("Running to",  " %7d :%7d", newfrontleftTarget,  newfrontrightTarget);
+                telemetry.addData("Currently at",  " at %7d :%7d",
+                        frontleft.getCurrentPosition(), frontright.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            frontleft.setPower(0);
+            frontright.setPower(0);
+            backleft.setPower(0);
+            backright.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            sleep(250);   // optional pause after each move.
+        }
+    }
+}
+*/

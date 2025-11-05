@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 public class Auto_Amulya {
 
-
+//Auto
     @Autonomous(name="AutoMode_Hinaa", group="Robot")
     public class AutoMode_Hinaa extends LinearOpMode {
 

@@ -72,9 +72,12 @@ public class Auto_Amulya extends LinearOpMode {
 
             strafeRight(12);
 
+            strafeLeft(12);
 
-            outtakeleft.setPower(1.0);
-            outtakeright.setPower(1.0);
+
+
+            outtakeleft.setPower(0.5);
+            outtakeright.setPower(0.5);
             telemetry.addLine("Running outtake...");
             telemetry.update();
             sleep(2000); // outtake runs for 2 seconds
@@ -120,6 +123,16 @@ public class Auto_Amulya extends LinearOpMode {
         frontright.setTargetPosition(frontright.getCurrentPosition() - move);
         backleft.setTargetPosition(backleft.getCurrentPosition() - move);
         backright.setTargetPosition(backright.getCurrentPosition() + move);
+
+        runToPosition();
+    }
+
+    private void strafeLeft(double inches) {
+        int move = (int)(inches * COUNTS_PER_INCH);
+        frontleft.setTargetPosition(frontleft.getCurrentPosition() - move);
+        frontright.setTargetPosition(frontright.getCurrentPosition() + move);
+        backleft.setTargetPosition(backleft.getCurrentPosition() + move);
+        backright.setTargetPosition(backright.getCurrentPosition() - move);
 
         runToPosition();
     }

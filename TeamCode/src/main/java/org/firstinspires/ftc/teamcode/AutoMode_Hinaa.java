@@ -128,15 +128,47 @@ public class AutoMode_Hinaa extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  35,  35, 3.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   16, -16, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        //encoderDrive(DRIVE_SPEED, -12, -12, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED,  32,  32, 3.0);
+        //encoderDrive(DRIVE_SPEED,  35,  35, 3.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(TURN_SPEED,   16, -16, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED, -58, -58, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoderDrive(TURN_SPEED,   -16, 16, 2.0);  // S2: Turn Left 12 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED,  25,  25, 3.0);//move forward
 
         intake.setPower(1.0);
+
         telemetry.addLine("Running intake...");
         telemetry.update();
         sleep(2000);
+
+        encoderDrive(DRIVE_SPEED,  3,  3, 3.0);//move forward 3 inches
+
+
+        // Step 2: Stop intake
+        intake.setPower(0);
+        sleep(500);
+
+        intake.setPower(1.0);
+
+        telemetry.addLine("Running intake...");
+        telemetry.update();
+        sleep(2000);
+
+        encoderDrive(DRIVE_SPEED,  3,  3, 3.0);//move forward 3 inches
+
+
+        // Step 2: Stop intake
+        intake.setPower(0);
+        sleep(500);
+
+        intake.setPower(1.0);
+
+        telemetry.addLine("Running intake...");
+        telemetry.update();
+        sleep(2000);
+
+        encoderDrive(DRIVE_SPEED,  3,  3, 3.0);//move forward 3 inches
+
+
 
         // Step 2: Stop intake
         intake.setPower(0);
@@ -145,6 +177,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
         encoderDrive(DRIVE_SPEED,  35,  35, 3.0);
         strafeDrive(DRIVE_SPEED, 12, 3.0);   // Strafe right 12 inches
         strafeDrive(DRIVE_SPEED, -12, 2.0);  // Strafe left 12 inches
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

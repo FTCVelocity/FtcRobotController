@@ -129,23 +129,3 @@ Note: Some names start with "Team" and others start with "team".  This is intent
 5)  Add:    include ':Team0417' to the "/settings.gradle" file.
     
 6)  Open up Android Studios and clean out any old files by using the menu to "Build/Clean Project""
-
-## Pushing code using `adb`:
-
-1) `adb devices` - This will display what devices are connected
-
-2) `adb kill-server` - Kill the server
-
-3) `adb start-server` - Start the server
-
-4) `adb connect 192.168.43.1` - This command should connect Android Studio to the Control Hub
-
-5) `adb shell` - This would display folder structure of the control hub
-
-6) For pushing the code use the below command 
-   `adb push <source> <destination>`
-
-For ex (on a mac) - `adb push /Users/prahar/StudioProjects/FtcRobotController/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ /sdcard/FIRST/java/src/org/firstinspires/ftc/teamcode/`
-
-NOTE: Do not change the destination path as it won't change for windows/mac.
-In our case the destination path is adb push  C:\Users\spati\StudioProjects\FtcRobotController\TeamCode\src\main\java\org\firstinspires\ftc\teamcode\ /sdcard/FIRST/java/src/org/firstinspires/ftc/teamcode/

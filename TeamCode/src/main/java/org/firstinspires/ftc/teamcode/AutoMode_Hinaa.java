@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -82,6 +83,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
     private DcMotor intake;
     private DcMotor outtakeleft;
     private DcMotor outtakeright;
+    private Servo belt;
     private ElapsedTime runtime = new ElapsedTime();
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
@@ -113,7 +115,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
         outtakeleft = hardwareMap.get(DcMotor.class, "outtakeleft");
         outtakeright = hardwareMap.get(DcMotor.class, "outtakeright");
 
-
+        belt = hardwareMap.get(Servo.class, "belt");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
@@ -130,6 +132,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
         intake.setPower(0);
         outtakeleft.setPower(0);
         outtakeright.setPower(0);
+        belt.setPosition(0.5);
 
 
         frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -156,23 +159,40 @@ public class AutoMode_Hinaa extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  35,  35, 3.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   16, -16, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED,  35,  35, 3.0);  // S1: Forward 35 Inches with 3 Sec timeout
+        encoderDrive(TURN_SPEED,   16, -16, 2.0);  // S2: Turn Left(?) 26 Inches with 2 Sec timeout
         //encoderDrive(DRIVE_SPEED, -12, -12, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED,  32,  32, 3.0);
+        encoderDrive(DRIVE_SPEED,  32,  32, 3.0); //move forward
 
         intake.setPower(1.0);
-        telemetry.addLine("Running intake...");
+        telemetry.addLine("Running intake..."); //intake ball
         telemetry.update();
         sleep(2000);
+
 
         // Step 2: Stop intake
         intake.setPower(0);
         sleep(500);
 
-        encoderDrive(DRIVE_SPEED,  35,  35, 3.0);
-        strafeDrive(DRIVE_SPEED, 12, 3.0);   // Strafe right 12 inches
-        strafeDrive(DRIVE_SPEED, -12, 2.0);  // Strafe left 12 inches
+        belt.setPosition(1.0);
+        telemetry.addLine("Running conveyor..."); //move ball up with conveyor belt
+        telemetry.update();
+        sleep(1500);
+
+        outtakeleft.setPower(1.0);
+        outtakeright.setPower(1.0);
+        telemetry.addLine("Running outtake..."); //shoot ball
+        telemetry.update();
+        sleep(1500);
+
+        intake.setPower(0);
+        outtakeleft.setPower(0); //stop everything
+        outtakeright.setPower(0);
+        belt.setPosition(0.5);
+
+        //encoderDrive(DRIVE_SPEED,  35,  35, 3.0);
+        //strafeDrive(DRIVE_SPEED, 12, 3.0);   // Strafe right 12 inches
+        //strafeDrive(DRIVE_SPEED, -12, 2.0);  // Strafe left 12 inches
 
 
 //Hi

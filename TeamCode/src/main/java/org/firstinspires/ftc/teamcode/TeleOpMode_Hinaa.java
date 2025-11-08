@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -61,6 +62,12 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
     private DcMotor intake;
     private DcMotor outtakeleft;
     private DcMotor outtakeright;
+    private Servo belt;
+
+    private boolean servoRunning = false;
+    private boolean continuousMode = false;
+    private long servoStartTime = 0;
+
 
 
     @Override
@@ -76,11 +83,12 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         outtakeleft = hardwareMap.get(DcMotor.class, "outtakeleft");
         outtakeright = hardwareMap.get(DcMotor.class, "outtakeright");
+        belt = hardwareMap.get(Servo.class, "belt");
 
         // Set directions (one of the outtakes should spin opposite)
         outtakeleft.setDirection(DcMotor.Direction.FORWARD);
         outtakeright.setDirection(DcMotor.Direction.REVERSE);
-
+        belt.setPosition(0.5);
 
 
 
@@ -174,6 +182,36 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
             outtakeleft.setPower(outtakePower);
             outtakeright.setPower(outtakePower);
 
+            if (gamepad2.x && !servoRunning) {
+                continuousMode = !continuousMode;
+                telemetry.addData("Conveyor Mode", continuousMode ? "Continuous" : "Timed");
+            }
+
+            // Y = activate conveyor
+            if (gamepad2.y && !servoRunning) {
+                servoRunning = true;
+                servoStartTime = System.currentTimeMillis();
+
+                if (continuousMode) {
+                    belt.setPosition(1.0); // full forward
+                } else {
+                    belt.setPosition(1.0); // start timed run
+                }
+            }
+
+            // Stop servo when button released (continuous mode)
+            if (!gamepad2.y && continuousMode && servoRunning) {
+                belt.setPosition(0.5); // neutral stop
+                servoRunning = false;
+            }
+
+            // Auto-stop after duration (timed mode)
+            if (!continuousMode && servoRunning &&
+                    (System.currentTimeMillis() - servoStartTime) > 2000) { // 2 seconds
+                belt.setPosition(0.5);
+                servoRunning = false;
+            }
+
             // Send calculated power to wheels
             frontleft.setPower(frontleftPower);
             frontright.setPower(frontrightPower);
@@ -186,6 +224,10 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backleftPower, backrightPower);
             telemetry.addData("Intake Power", intakePower);
             telemetry.addData("Outtake Power", outtakePower);
+            telemetry.addData("Status", "Run Time: " + runtime);
+            telemetry.addData("Conveyor Mode", continuousMode ? "Continuous" : "Timed");
+            telemetry.addData("Conveyor Running", servoRunning);
+            telemetry.update();
             telemetry.update();
         }
     }}

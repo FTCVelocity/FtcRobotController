@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
+//import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -50,7 +53,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="TeleOpMode_Hinaa", group="OpMode")
-public class TeleOpMode_Hinaa extends LinearOpMode {
+public class  TeleOpMode_Hinaa extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -61,6 +64,12 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
     private DcMotor intake;
     private DcMotor outtakeleft;
     private DcMotor outtakeright;
+    private CRServo frontWheels;
+    private CRServo backWheels;
+
+    private boolean servoRunning = false;
+    private boolean continuousMode = false;
+    private long servoStartTime = 0;
 
 
     @Override
@@ -76,12 +85,13 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         outtakeleft = hardwareMap.get(DcMotor.class, "outtakeleft");
         outtakeright = hardwareMap.get(DcMotor.class, "outtakeright");
+        frontWheels = hardwareMap.get(CRServo.class, "frontWheels");
+        backWheels = hardwareMap.get(CRServo.class, "backWheels");
 
         // Set directions (one of the outtakes should spin opposite)
         outtakeleft.setDirection(DcMotor.Direction.FORWARD);
         outtakeright.setDirection(DcMotor.Direction.REVERSE);
-
-
+        //frontWheels.setDirection(CRServo.Direction.REVERSE);
 
 
 
@@ -104,6 +114,9 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
         intake.setPower(0);
         outtakeleft.setPower(0);
         outtakeright.setPower(0);
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -118,16 +131,16 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
+            double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double lateral = gamepad1.left_stick_x;
+            double yaw = gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double frontleftPower  = axial + lateral + yaw;
+            double frontleftPower = axial + lateral + yaw;
             double frontrightPower = axial - lateral - yaw;
-            double backleftPower   = axial - lateral + yaw;
-            double backrightPower  = axial + lateral - yaw;
+            double backleftPower = axial - lateral + yaw;
+            double backrightPower = axial + lateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -136,10 +149,10 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
             max = Math.max(max, Math.abs(backrightPower));
 
             if (max > 1.0) {
-                frontleftPower  /= max;
+                frontleftPower /= max;
                 frontrightPower /= max;
-                backleftPower   /= max;
-                backrightPower  /= max;
+                backleftPower /= max;
+                backrightPower /= max;
             }
 
             // This is test code:
@@ -160,19 +173,36 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
             */
 
             // Intake control — use right trigger for intake in, left trigger for reverse
-            double intakePower = gamepad2.right_trigger - gamepad2.left_trigger;
+            double rawPower = gamepad2.right_trigger - gamepad2.left_trigger;
+            double intakePower = rawPower * 0.7;
             intake.setPower(intakePower);
-
             // Outtake control — press 'A' to run both outtakes, 'B' to reverse
             double outtakePower = 0;
             if (gamepad2.a) {
-                outtakePower = .75; // full forward
+                outtakePower = 1.0; // full forward
             } else if (gamepad2.b) {
-                outtakePower = -.75; // reverse
+                outtakePower = -1.0; // reverse
             }
 
             outtakeleft.setPower(outtakePower);
             outtakeright.setPower(outtakePower);
+
+            double rollerPower = 0;
+
+            // Roller control (CRServo)
+            if (gamepad1.dpad_up) {
+                frontWheels.setPower(1.0);   // forward
+                backWheels.setPower(1.0);
+            }
+            else if (gamepad1.dpad_down) {
+                frontWheels.setPower(-1.0);  // reverse
+                backWheels.setPower(-1.0);
+            }
+            else if (gamepad1.dpad_left || gamepad1.dpad_right) {
+                frontWheels.setPower(0.0);   // stop
+                backWheels.setPower(0.0);
+            }
+
 
             // Send calculated power to wheels
             frontleft.setPower(frontleftPower);
@@ -184,8 +214,15 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontleftPower, frontrightPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backleftPower, backrightPower);
+            telemetry.addData("Front Wheels Pos", frontWheels.getPower());
+            telemetry.addData("Back Wheels Pos", backWheels.getPower());
             telemetry.addData("Intake Power", intakePower);
             telemetry.addData("Outtake Power", outtakePower);
+            telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.update();
+            //telemetry.update();
         }
-    }}
+
+    }
+
+}

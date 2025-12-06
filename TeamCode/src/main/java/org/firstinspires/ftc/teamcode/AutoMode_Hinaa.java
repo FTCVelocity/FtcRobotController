@@ -1,12 +1,11 @@
 
-
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 /*Copyright (c) 2017 FIRST. All rights reserved.
  *
@@ -38,17 +37,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 
-
-
-
-
+/*
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-
+*/
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
  * The code is structured as a LinearOpMode
@@ -79,19 +74,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //@Disabled
 public class AutoMode_Hinaa extends LinearOpMode {
 
-
     //Declare OpMode members.
     private DcMotor frontleft   = null;
     private DcMotor frontright  = null;
     private DcMotor backleft  = null;
     private DcMotor backright  = null;
 
-
     private DcMotor intake;
     private DcMotor outtakeleft;
     private DcMotor outtakeright;
-    private ElapsedTime runtime = new ElapsedTime();
 
+    private CRServo frontWheels;
+    private CRServo backWheels;
+    private ElapsedTime runtime = new ElapsedTime();
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -109,11 +104,8 @@ public class AutoMode_Hinaa extends LinearOpMode {
     static final double STRAFE_CORRECTION = 1.2;        // Adjust to fine-tune strafe distance
 
 
-
-
     @Override
     public void runOpMode() {
-
 
         // Initialize the drive system variables.
         frontleft  = hardwareMap.get(DcMotor.class, "frontleft");
@@ -124,9 +116,8 @@ public class AutoMode_Hinaa extends LinearOpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         outtakeleft = hardwareMap.get(DcMotor.class, "outtakeleft");
         outtakeright = hardwareMap.get(DcMotor.class, "outtakeright");
-
-
-
+        frontWheels = hardwareMap.get(CRServo.class, "frontWheels");
+        backWheels = hardwareMap.get(CRServo.class, "backWheels");
 
 
 
@@ -138,16 +129,15 @@ public class AutoMode_Hinaa extends LinearOpMode {
         frontright.setDirection(DcMotor.Direction.FORWARD);
         backright.setDirection(DcMotor.Direction.FORWARD);
         // Make the two outtakes spin opposite ways
-        outtakeleft.setDirection(DcMotor.Direction.FORWARD);
-        outtakeright.setDirection(DcMotor.Direction.REVERSE);
-
+        outtakeleft.setDirection(DcMotor.Direction.REVERSE);
+        outtakeright.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all powers to zero initially
         intake.setPower(0);
         outtakeleft.setPower(0);
         outtakeright.setPower(0);
-
-
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
 
 
         frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -155,12 +145,10 @@ public class AutoMode_Hinaa extends LinearOpMode {
         backleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
         frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at",  "%7d :%7d",
@@ -171,85 +159,268 @@ public class AutoMode_Hinaa extends LinearOpMode {
         telemetry.addLine("Initialized — waiting for start");
         telemetry.update();
 
-
         // Wait for the game to start (driver presses START)
         waitForStart();
 
+/*
+        // Run rollers to move game piece up
+        frontWheels.setPower(1.0);
+        backWheels.setPower(1.0);
+        telemetry.addLine("Running rollers...");
+        telemetry.update();
+        sleep(1500);
 
+        outtakeleft.setPower(-1.0);
+        outtakeright.setPower(-1.0);
+        telemetry.addLine("Running outtake..."); //shoot ball
+        telemetry.update();
+        //sleep(1500);
+
+        // Run rollers to move game piece up
+        frontWheels.setPower(1.0);
+        backWheels.setPower(1.0);
+        telemetry.addLine("Running rollers...");
+        telemetry.update();
+        sleep(1500);
+
+        // Run rollers again
+        frontWheels.setPower(1.0);
+        backWheels.setPower(1.0);
+        telemetry.addLine("Running rollers...");
+        telemetry.update();
+        sleep(3000);
+
+        // Stop rollers
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+        // Stop outtake
+        outtakeleft.setPower(0);
+        outtakeright.setPower(0);
+*/
+        telemetry.addLine("Forward 40...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  45,  45, 2.0);
+        sleep(250);
+
+        outtakeleft.setPower(1.0);
+        outtakeright.setPower(1.0);
+        telemetry.addLine("outtake ON..."); //shoot ball
+        telemetry.update();
+
+        sleep(2500);
+
+        intake.setPower(-1.0);
+        telemetry.addLine("intake ON...");
+        telemetry.update();
+
+        frontWheels.setPower(1.0);
+        backWheels.setPower(1.0);
+        telemetry.addLine("rollers ON...");
+        telemetry.update();
+
+        sleep(3500);
+
+        outtakeleft.setPower(0.0);
+        outtakeright.setPower(0.0);
+        telemetry.addLine("outtake OFF..."); //shoot ball
+        telemetry.update();
+
+        intake.setPower(0.0);
+        telemetry.addLine("intake OFF...");
+        telemetry.update();
+
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+        telemetry.addLine("rollers OFF...");
+        telemetry.update();
+
+        telemetry.addLine("Forward 15...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  15,  15, 2.0);
+
+        telemetry.addLine("Turning Right...");
+        telemetry.update();
+        encoderDrive(TURN_SPEED, 31, -31, 2.0);  // adjust inches to set turn angle
+        //sleep(250);
+
+        intake.setPower(-1.0);
+        telemetry.addLine("intake ON...");
+        telemetry.update();
+
+        frontWheels.setPower(0.25);
+        backWheels.setPower(0.25);
+        telemetry.addLine("rollers ON...");
+        telemetry.update();
+
+        telemetry.addLine("Forward 40...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  40,  40, 2.0);
+        sleep(250);
+
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+        telemetry.addLine("rollers OFF...");
+        telemetry.update();
+
+        intake.setPower(0.0);
+        telemetry.addLine("intake OFF...");
+        telemetry.update();
+
+        telemetry.addLine("Backward 40...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  -40,  -40, 2.0);
+
+        telemetry.addLine("Turning Left...");
+        telemetry.update();
+        encoderDrive(TURN_SPEED, -31, 31, 2.0);  // adjust inches to set turn angle
+        //sleep(250);
+
+        telemetry.addLine("Backward 15...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  -15,  -15, 2.0);
+
+        outtakeleft.setPower(1.0);
+        outtakeright.setPower(1.0);
+        telemetry.addLine("outtake ON..."); //shoot ball
+        telemetry.update();
+
+        sleep(1500);
+
+        intake.setPower(-1.0);
+        telemetry.addLine("intake ON...");
+        telemetry.update();
+
+        frontWheels.setPower(1.0);
+        backWheels.setPower(1.0);
+        telemetry.addLine("rollers ON...");
+        telemetry.update();
+
+        sleep(2500);
+
+        outtakeleft.setPower(1.0);
+        outtakeright.setPower(1.0);
+        telemetry.addLine("outtake OFF..."); //shoot ball
+        telemetry.update();
+
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+        telemetry.addLine("rollers OFF...");
+        telemetry.update();
+
+        intake.setPower(0.0);
+        telemetry.addLine("intake OFF...");
+        telemetry.update();
+/*
+        telemetry.addLine("Strafing Left...");
+        telemetry.update();
+        strafeDrive(DRIVE_SPEED, -20, 3.0);   // 20 inches right
+        //sleep(250);
+
+        telemetry.addLine("Forward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, 20, 20, 3.0);
+        //sleep(250);
+
+        telemetry.addLine("Backward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, -20, -20, 3.0);
+        //sleep(250);
+
+        telemetry.addLine("Strafe Left 20...");
+        telemetry.update();
+        strafeDrive(DRIVE_SPEED, -20, 3.0);
+        //sleep(250);
+
+        intake.setPower(1.0);
+
+        telemetry.addLine("Forward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, 20, 20, 3.0);
+        //sleep(250);
+        intake.setPower(1.0);
+
+        telemetry.addLine("Backward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, -20, -20, 3.0);
+        //sleep(250);
+
+        telemetry.addLine("Strafe Left 20...");
+        telemetry.update();
+        strafeDrive(DRIVE_SPEED, -20, 3.0);
+        //sleep(250);
+
+        intake.setPower(1.0);
+        telemetry.addLine("Forward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, 20, 20, 3.0);
+        //sleep(250);
+
+        intake.setPower(0.0);
+        telemetry.addLine("Backward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, -20, -20, 3.0);
+        //sleep(250);
+
+        telemetry.addLine("Strafe Left 20...");
+        telemetry.update();
+        strafeDrive(DRIVE_SPEED, -20, 3.0);
+        //sleep(250);
+
+        intake.setPower(1.0);
+        telemetry.addLine("Forward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, 20, 20, 3.0);
+        //sleep(250);
+
+        intake.setPower(0.0);
+        telemetry.addLine("Backward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, -20, -20, 3.0);
+        //sleep(250);
+*/
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        //encoderDrive(DRIVE_SPEED,  35,  35, 3.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   16, -16, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -58, -58, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED,   -16, 16, 2.0);  // S2: Turn Left 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED,  25,  25, 3.0);//move forward
-
+        /*encoderDrive(DRIVE_SPEED,  35,  35, 3.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(TURN_SPEED,   16, -16, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -12, -12, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED,  32,  32, 3.0);
 
         intake.setPower(1.0);
-
         telemetry.addLine("Running intake...");
         telemetry.update();
         sleep(2000);
-
-        encoderDrive(DRIVE_SPEED,  3,  3, 3.0);//move forward 3 inches
-
 
         // Step 2: Stop intake
         intake.setPower(0);
         sleep(500);
 
-        intake.setPower(1.0);
-
-        telemetry.addLine("Running intake...");
+        outtakeleft.setPower(1.0);
+        outtakeright.setPower(1.0);
+        telemetry.addLine("Running outtake..."); //shoot ball
         telemetry.update();
-        sleep(2000);
-
-        encoderDrive(DRIVE_SPEED,  3,  3, 3.0);//move forward 3 inches
+        sleep(1500);
 
 
-        // Step 2: Stop intake
-        intake.setPower(0);
-        sleep(500);
-
-        intake.setPower(1.0);
-
-        telemetry.addLine("Running intake...");
-        telemetry.update();
-        sleep(2000);
-
-        encoderDrive(DRIVE_SPEED,  3,  3, 3.0);//move forward 3 inches
-
-
-        // Step 2: Stop intake
-        intake.setPower(0);
-        sleep(500);
-
-
-
-        //strafeDrive(DRIVE_SPEED, 12, 3.0);   // Strafe right 12 inches
-        //strafeDrive(DRIVE_SPEED, -12, 2.0);  // Strafe left 12 inches
-
-
-
-
-
-
-
+*/
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);  // pause to display final telemetry message.
     }
 
-
     /*
-     *  Method to perform a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the OpMode running.
-     */
+    //rollers reverse: frontWheels.setPosition(0.0);
+    //backWheels.setPosition(0.0);
+
+    //rollers stop: frontWheels.setPosition(0.5);
+    //backWheels.setPosition(0.5);
+         *  Method to perform a relative move, based on encoder counts.
+         *  Encoders are not reset as the move is based on the current position.
+         *  Move will stop if any of three conditions occur:
+         *  1) Move gets to the desired position
+         *  2) Move runs out of time
+         *  3) Driver stops the OpMode running.
+    */
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
@@ -258,10 +429,8 @@ public class AutoMode_Hinaa extends LinearOpMode {
         int newbackleftTarget;
         int newbackrightTarget;
 
-
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
-
 
             // Determine new target position, and pass to motor controller
             newfrontleftTarget = frontleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
@@ -273,13 +442,11 @@ public class AutoMode_Hinaa extends LinearOpMode {
             backleft.setTargetPosition(newbackleftTarget);
             backright.setTargetPosition(newbackrightTarget);
 
-
             // Turn On RUN_TO_POSITION
             frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
 
             // reset the timeout time and start motion.
             runtime.reset();
@@ -287,7 +454,6 @@ public class AutoMode_Hinaa extends LinearOpMode {
             frontright.setPower(Math.abs(speed));
             backleft.setPower(Math.abs(speed));
             backright.setPower(Math.abs(speed));
-
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -301,8 +467,6 @@ public class AutoMode_Hinaa extends LinearOpMode {
                             backleft.isBusy() || backright.isBusy())) {
 
 
-
-
                 // Display it for the driver.
                 telemetry.addData("Running to",  " %7d :%7d", newfrontleftTarget,  newfrontrightTarget);
                 telemetry.addData("Currently at",  " at %7d :%7d",
@@ -310,13 +474,11 @@ public class AutoMode_Hinaa extends LinearOpMode {
                 telemetry.update();
             }
 
-
             // Stop all motion;
             frontleft.setPower(0);
             frontright.setPower(0);
             backleft.setPower(0);
             backright.setPower(0);
-
 
             // Turn off RUN_TO_POSITION
             frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -324,37 +486,30 @@ public class AutoMode_Hinaa extends LinearOpMode {
             backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
             sleep(250);   // optional pause after each move.
         }
-
 
     }
     public void strafeDrive(double speed, double inches, double timeoutS) {
         int flTarget, frTarget, blTarget, brTarget;
 
-
         if (opModeIsActive()) {
             int moveCounts = (int)(inches * COUNTS_PER_INCH * STRAFE_CORRECTION);
-
 
             flTarget = frontleft.getCurrentPosition() + moveCounts;
             frTarget = frontright.getCurrentPosition() - moveCounts;
             blTarget = backleft.getCurrentPosition() - moveCounts;
             brTarget = backright.getCurrentPosition() + moveCounts;
 
-
             frontleft.setTargetPosition(flTarget);
             frontright.setTargetPosition(frTarget);
             backleft.setTargetPosition(blTarget);
             backright.setTargetPosition(brTarget);
 
-
             frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
 
             runtime.reset();
             frontleft.setPower(Math.abs(speed));
@@ -362,22 +517,18 @@ public class AutoMode_Hinaa extends LinearOpMode {
             backleft.setPower(Math.abs(speed));
             backright.setPower(Math.abs(speed));
 
-
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (frontleft.isBusy() || frontright.isBusy() || backleft.isBusy() || backright.isBusy())) {
-
 
                 telemetry.addData("Strafing to", "FL:%d FR:%d", flTarget, frTarget);
                 telemetry.update();
             }
 
-
             frontleft.setPower(0);
             frontright.setPower(0);
             backleft.setPower(0);
             backright.setPower(0);
-
 
             frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -387,8 +538,23 @@ public class AutoMode_Hinaa extends LinearOpMode {
         }
     }
 
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

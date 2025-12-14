@@ -110,6 +110,11 @@ public class  TeleOpMode_Hinaa extends LinearOpMode {
         frontright.setDirection(DcMotor.Direction.FORWARD);
         backright.setDirection(DcMotor.Direction.FORWARD);
 
+        frontleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Stop motors initially
         intake.setPower(0);
         outtakeleft.setPower(0);
@@ -179,9 +184,9 @@ public class  TeleOpMode_Hinaa extends LinearOpMode {
             // Outtake control — press 'A' to run both outtakes, 'B' to reverse
             double outtakePower = 0;
             if (gamepad2.a) {
-                outtakePower = 1.0; // full forward
+                outtakePower = 0.8; // full forward
             } else if (gamepad2.b) {
-                outtakePower = -1.0; // reverse
+                outtakePower = -0.8; // reverse
             }
 
             outtakeleft.setPower(outtakePower);
@@ -190,15 +195,15 @@ public class  TeleOpMode_Hinaa extends LinearOpMode {
             double rollerPower = 0;
 
             // Roller control (CRServo)
-            if (gamepad1.dpad_up) {
+            if (gamepad2.dpad_up) {
                 frontWheels.setPower(1.0);   // forward
                 backWheels.setPower(1.0);
             }
-            else if (gamepad1.dpad_down) {
+            else if (gamepad2.dpad_down) {
                 frontWheels.setPower(-1.0);  // reverse
                 backWheels.setPower(-1.0);
             }
-            else if (gamepad1.dpad_left || gamepad1.dpad_right) {
+            else if (gamepad2.dpad_left || gamepad2.dpad_right) {
                 frontWheels.setPower(0.0);   // stop
                 backWheels.setPower(0.0);
             }

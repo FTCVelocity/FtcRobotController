@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -70,9 +69,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 //@Disabled
-@Autonomous(name="AutoMode_Hinaa", group="Robot")
+@Autonomous(name="Auto_Red", group="Robot")
 //@Disabled
-public class AutoMode_Hinaa extends LinearOpMode {
+public class Auto_Red extends LinearOpMode {
 
     //Declare OpMode members.
     private DcMotor frontleft   = null;
@@ -94,7 +93,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
     // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
     // This is gearing DOWN for less speed and more torque.
     // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
-    static final double     COUNTS_PER_MOTOR_REV    = 383.6 ;
+    static final double     COUNTS_PER_MOTOR_REV    = 383.6 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -167,8 +166,6 @@ public class AutoMode_Hinaa extends LinearOpMode {
         frontWheels.setPower(1.0);
         backWheels.setPower(1.0);
         telemetry.addLine("Running rollers...");
-<<<<<<< HEAD
-=======
         telemetry.update();
         sleep(1500);
 
@@ -209,7 +206,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
         telemetry.addLine("outtake ON..."); //shoot ball
         telemetry.update();
 
-        sleep(2500);
+        sleep(1500);
 
         intake.setPower(-1.0);
         telemetry.addLine("intake ON...");
@@ -240,9 +237,9 @@ public class AutoMode_Hinaa extends LinearOpMode {
         telemetry.update();
         encoderDrive(DRIVE_SPEED,  15,  15, 2.0);
 
-        telemetry.addLine("Turning Right...");
+        telemetry.addLine("Turning Left...");
         telemetry.update();
-        encoderDrive(TURN_SPEED, 31, -31, 2.0);  // adjust inches to set turn angle
+        encoderDrive(TURN_SPEED, -31, 31, 2.0);  // adjust inches to set turn angle
         //sleep(250);
 
         intake.setPower(-1.0);
@@ -254,9 +251,22 @@ public class AutoMode_Hinaa extends LinearOpMode {
         telemetry.addLine("rollers ON...");
         telemetry.update();
 
-        telemetry.addLine("Forward 40...");
+        telemetry.addLine("Forward 25...");
         telemetry.update();
-        encoderDrive(DRIVE_SPEED,  40,  40, 2.0);
+        encoderDrive(DRIVE_SPEED,  25,  25, 2.0);
+        sleep(250);
+
+        telemetry.addLine("Forward 10...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
+        sleep(250);
+        telemetry.addLine("Forward 10...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
+        sleep(250);
+        telemetry.addLine("Forward 10...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  20,  20, 2.0);
         sleep(250);
 
         frontWheels.setPower(0.0);
@@ -268,13 +278,13 @@ public class AutoMode_Hinaa extends LinearOpMode {
         telemetry.addLine("intake OFF...");
         telemetry.update();
 
-        telemetry.addLine("Backward 40...");
+        telemetry.addLine("Backward 55...");
         telemetry.update();
-        encoderDrive(DRIVE_SPEED,  -40,  -40, 2.0);
+        encoderDrive(DRIVE_SPEED,  -55,  -55, 2.0);
 
-        telemetry.addLine("Turning Left...");
+        telemetry.addLine("Turning Right...");
         telemetry.update();
-        encoderDrive(TURN_SPEED, -31, 31, 2.0);  // adjust inches to set turn angle
+        encoderDrive(TURN_SPEED, 31, -31, 2.0);  // adjust inches to set turn angle
         //sleep(250);
 
         telemetry.addLine("Backward 15...");
@@ -312,6 +322,59 @@ public class AutoMode_Hinaa extends LinearOpMode {
         intake.setPower(0.0);
         telemetry.addLine("intake OFF...");
         telemetry.update();
+
+        telemetry.addLine("Forward 15...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  15,  15, 2.0);
+        sleep(250);
+
+        telemetry.addLine("Turning Left...");
+        telemetry.update();
+        encoderDrive(TURN_SPEED, -31, 31, 2.0);  // adjust inches to set turn angle
+        //sleep(250);
+
+        strafeDrive(DRIVE_SPEED, 15, 3.0);   // 15 inches left
+
+        intake.setPower(-1.0);
+        telemetry.addLine("intake ON...");
+        telemetry.update();
+
+        frontWheels.setPower(0.25);
+        backWheels.setPower(0.25);
+        telemetry.addLine("rollers ON...");
+        telemetry.update();
+
+        telemetry.addLine("Forward 25...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  25,  25, 2.0);
+        sleep(250);
+
+        telemetry.addLine("Forward 10...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
+        sleep(250);
+        telemetry.addLine("Forward 10...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
+        sleep(250);
+        telemetry.addLine("Forward 10...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  20,  20, 2.0);
+        sleep(250);
+
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+        telemetry.addLine("rollers OFF...");
+        telemetry.update();
+
+        intake.setPower(0.0);
+        telemetry.addLine("intake OFF...");
+        telemetry.update();
+
+        telemetry.addLine("Backward 55...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  -55,  -55, 2.0);
+
 /*
         telemetry.addLine("Strafing Left...");
         telemetry.update();
@@ -389,274 +452,8 @@ public class AutoMode_Hinaa extends LinearOpMode {
 
         intake.setPower(1.0);
         telemetry.addLine("Running intake...");
->>>>>>> ee4241a3b2957cf4ea24bff9ec224a247769979e
         telemetry.update();
-        sleep(1500);
-
-<<<<<<< HEAD
-        outtakeleft.setPower(-1.0);
-        outtakeright.setPower(-1.0);
-        telemetry.addLine("Running outtake..."); //shoot ball
-        telemetry.update();
-        //sleep(1500);
-
-        // Run rollers to move game piece up
-        frontWheels.setPower(1.0);
-        backWheels.setPower(1.0);
-        telemetry.addLine("Running rollers...");
-        telemetry.update();
-        sleep(1500);
-
-        // Run rollers again
-        frontWheels.setPower(1.0);
-        backWheels.setPower(1.0);
-        telemetry.addLine("Running rollers...");
-        telemetry.update();
-        sleep(3000);
-
-        // Stop rollers
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        // Stop outtake
-        outtakeleft.setPower(0);
-        outtakeright.setPower(0);
-*/
-        telemetry.addLine("Forward 40...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  40,  40, 2.0);
-        sleep(250);
-
-        outtakeleft.setPower(0.8);
-        outtakeright.setPower(0.8);
-        telemetry.addLine("outtake ON..."); //shoot ball
-        telemetry.update();
-
-        sleep(1500);
-
-
-        frontWheels.setPower(1.0);
-        backWheels.setPower(1.0);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
-        intake.setPower(-0.1);
-        telemetry.addLine("intake ON...");
-        telemetry.update();
-
-        sleep(3500);
-
-        outtakeleft.setPower(0.0);
-        outtakeright.setPower(0.0);
-        telemetry.addLine("outtake OFF..."); //shoot ball
-        telemetry.update();
-
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        telemetry.addLine("Forward 10...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
-
-        telemetry.addLine("Turning Right...");
-        telemetry.update();
-        encoderDrive(TURN_SPEED, 31, -31, 2.0);  // adjust inches to set turn angle
-        //sleep(250);
-        telemetry.addLine("Strafe Right 5...");
-        telemetry.update();
-        strafeDrive(DRIVE_SPEED, 5, 3.0);
-
-        intake.setPower(-1.0);
-        telemetry.addLine("intake ON...");
-        telemetry.update();
-
-        telemetry.addLine("Forward 30...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  30,  30, 2.0);
-
-        frontWheels.setPower(0.25);
-        backWheels.setPower(0.25);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-        sleep(250);
-
-        telemetry.addLine("Forward 10...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
-        sleep(250);
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        frontWheels.setPower(0.1);
-        backWheels.setPower(0.1);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
-        telemetry.addLine("Forward 10...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
-        sleep(250);
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        telemetry.addLine("Forward 10...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
-        sleep(250);
-
-        frontWheels.setPower(0.1);
-        backWheels.setPower(0.1);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
-
-        telemetry.addLine("Backward 60...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  -60,  -60, 2.0);
-
-        telemetry.addLine("Turning Left...");
-        telemetry.update();
-        encoderDrive(TURN_SPEED, -31, 31, 2.0);  // adjust inches to set turn angle
-        //sleep(250);
-
-        telemetry.addLine("Backward 10...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  -10,  -10, 2.0);
-
-        outtakeleft.setPower(1.0);
-        outtakeright.setPower(1.0);
-        telemetry.addLine("outtake ON..."); //shoot ball
-        telemetry.update();
-
-        sleep(1500);
-
-        frontWheels.setPower(1.0);
-        backWheels.setPower(1.0);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
-        intake.setPower(-0.1);
-        telemetry.addLine("intake ON...");
-        telemetry.update();
-
-        sleep(2500);
-
-        outtakeleft.setPower(0.0);
-        outtakeright.setPower(0.0);
-        telemetry.addLine("outtake OFF..."); //shoot ball
-        telemetry.update();
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
-
-        telemetry.addLine("Forward 10...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
-        sleep(250);
-
-        telemetry.addLine("Turning Right...");
-        telemetry.update();
-        encoderDrive(TURN_SPEED, 31, -31, 2.0);  // adjust inches to set turn angle
-        //sleep(250);
-
-        strafeDrive(DRIVE_SPEED, 20, 3.0);   // 15 inches left
-
-        intake.setPower(-1.0);
-        telemetry.addLine("intake ON...");
-        telemetry.update();
-
-        frontWheels.setPower(0.1);
-        backWheels.setPower(0.1);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
-        telemetry.addLine("Forward 30...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  30,  30, 2.0);
-
-        frontWheels.setPower(0.25);
-        backWheels.setPower(0.25);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-        sleep(250);
-
-        telemetry.addLine("Forward 10...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
-        sleep(250);
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        frontWheels.setPower(0.1);
-        backWheels.setPower(0.1);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
-        telemetry.addLine("Forward 10...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
-        sleep(250);
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        telemetry.addLine("Forward 10...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
-        sleep(250);
-
-        frontWheels.setPower(0.1);
-        backWheels.setPower(0.1);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
-
-        telemetry.addLine("Backward 60...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  -60,  -60, 2.0);
-
-        telemetry.addLine("Turning Left...");
-        telemetry.update();
-        encoderDrive(TURN_SPEED, -31, 31, 2.0);  // adjust inches to set turn angle
-        //sleep(250);
+        sleep(2000);
 
         // Step 2: Stop intake
         intake.setPower(0);
@@ -668,14 +465,8 @@ public class AutoMode_Hinaa extends LinearOpMode {
         telemetry.update();
         sleep(1500);
 
-/*
-        telemetry.addLine("Strafing Left...");
-        telemetry.update();
-        strafeDrive(DRIVE_SPEED, -20, 3.0);   // 20 inches right
-        //sleep(250);
+
 */
-
-
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -817,102 +608,26 @@ public class AutoMode_Hinaa extends LinearOpMode {
         telemetry.addLine("intake ON...");
         telemetry.update();
 
-        telemetry.addLine("Forward 30...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  30,  30, 2.0);
-
         frontWheels.setPower(0.25);
         backWheels.setPower(0.25);
         telemetry.addLine("rollers ON...");
         telemetry.update();
+        telemetry.addLine("Forward 25...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  25,  25, 2.0);
         sleep(250);
-
         telemetry.addLine("Forward 10...");
         telemetry.update();
         encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
         sleep(250);
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        frontWheels.setPower(0.1);
-        backWheels.setPower(0.1);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
         telemetry.addLine("Forward 10...");
         telemetry.update();
         encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
         sleep(250);
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
         telemetry.addLine("Forward 10...");
         telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
+        encoderDrive(DRIVE_SPEED,  20,  20, 2.0);
         sleep(250);
-
-        frontWheels.setPower(0.1);
-        backWheels.setPower(0.1);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
-
-        telemetry.addLine("Backward 60...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  -60,  -60, 2.0);
-
-        telemetry.addLine("Turning Left...");
-        telemetry.update();
-        encoderDrive(TURN_SPEED, -31, 31, 2.0);  // adjust inches to set turn angle
-        //sleep(250);
-    }
-
-    public void shootThree(){
-        outtakeleft.setPower(0.8);
-        outtakeright.setPower(0.8);
-        telemetry.addLine("outtake ON..."); //shoot ball
-        telemetry.update();
-
-        sleep(1500);
-
-        frontWheels.setPower(1.0);
-        backWheels.setPower(1.0);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
-        intake.setPower(-0.1);
-        telemetry.addLine("intake ON...");
-        telemetry.update();
-
-        sleep(3500);
-
-        outtakeleft.setPower(0.0);
-        outtakeright.setPower(0.0);
-        telemetry.addLine("outtake OFF...");
-        telemetry.update();
-
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
     }
 
 }

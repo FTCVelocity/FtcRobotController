@@ -13,8 +13,8 @@ public class outtakePIDFTuner extends OpMode{
     public DcMotorEx outtakeright;
     public DcMotorEx outtakeleft;
 
-    public double highVelocity = 1500;
-    public double lowVelocity = 900;
+    public double highVelocity = 3000;
+    public double lowVelocity = 2700;
     double curTargetVelocity = highVelocity;
 
     double F = 0;
@@ -34,7 +34,7 @@ public class outtakePIDFTuner extends OpMode{
         outtakeright.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         outtakeleft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        outtakeright.setDirection(DcMotorSimple.Direction.REVERSE);
+        outtakeright.setDirection(DcMotorSimple.Direction.FORWARD);
         outtakeleft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P,0, 0, F);
@@ -65,7 +65,35 @@ public class outtakePIDFTuner extends OpMode{
             F += stepSizes[stepIndex];
         }
         if(gamepad1.dpadDownWasPressed()) {
-            F += stepSizes(stepIndex);
+            P -= stepSizes[stepIndex];
         }
+        if(gamepad1.dpadUpWasPressed()) {
+            P += stepSizes[stepIndex];
+        }
+
+        //set now PIDF coefficients
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P,0, 0, F);
+        outtakeright.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        outtakeleft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+
+        // set velocity
+        outtakeright.setVelocity(curTargetVelocity);
+        outtakeleft.setVelocity(curTargetVelocity);
+
+        double rightVelocity = outtakeright.getVelocity();
+        double leftVelocity = outtakeleft.getVelocity();
+        double righterror = curTargetVelocity - rightVelocity;
+        double lefterror = curTargetVelocity - leftVelocity;
+
+        // Telemetry
+        telemetry.addData("Target Velocity", curTargetVelocity);
+        telemetry.addData("Right Velocity", "%.2f", rightVelocity);
+        telemetry.addData("Left Velocity", "%.2f", leftVelocity);
+        telemetry.addData("Right Error", "%.2f", righterror);
+        telemetry.addData("Left Error", "%.2f", lefterror);
+        telemetry.addLine("--------------------------------");
+        telemetry.addData("Tuning P", "%.4f (D-Pad Up/Down)", P);
+        telemetry.addData("Tuning F", "%.4f (D-Pad Left/Right)", F);
+        telemetry.addData("Step Size", "%.4f (B Button)", stepSizes[stepIndex]);
     }
 }

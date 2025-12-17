@@ -82,7 +82,7 @@ public class  TeleOpMode_Hinaa extends LinearOpMode {
     static final double OUTTAKE_D2 = 0.0;
     static final double OUTTAKE_F2 = 39.5;
 
-    static final double OUTTAKE_VELOCITY2 = 3000; // ticks/sec
+    static final double OUTTAKE_VELOCITY2 = 2700; // ticks/sec
 
     @Override
     public void runOpMode() {

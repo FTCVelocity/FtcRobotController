@@ -13,8 +13,8 @@ public class outtakePIDFTuner extends OpMode{
     public DcMotorEx outtakeright;
     public DcMotorEx outtakeleft;
 
-    public double highVelocity = 3000;
-    public double lowVelocity = 2700;
+    public double highVelocity = 2700;
+    public double lowVelocity = 1400;
     double curTargetVelocity = highVelocity;
 
     double F = 0;

@@ -101,7 +101,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
-    static final double STRAFE_CORRECTION = 1.2;
+    static final double STRAFE_CORRECTION = 1.2;        // Adjust to fine-tune strafe distance
 
 
     @Override
@@ -167,9 +167,233 @@ public class AutoMode_Hinaa extends LinearOpMode {
         frontWheels.setPower(1.0);
         backWheels.setPower(1.0);
         telemetry.addLine("Running rollers...");
+<<<<<<< HEAD
+=======
         telemetry.update();
         sleep(1500);
 
+        outtakeleft.setPower(-1.0);
+        outtakeright.setPower(-1.0);
+        telemetry.addLine("Running outtake..."); //shoot ball
+        telemetry.update();
+        //sleep(1500);
+
+        // Run rollers to move game piece up
+        frontWheels.setPower(1.0);
+        backWheels.setPower(1.0);
+        telemetry.addLine("Running rollers...");
+        telemetry.update();
+        sleep(1500);
+
+        // Run rollers again
+        frontWheels.setPower(1.0);
+        backWheels.setPower(1.0);
+        telemetry.addLine("Running rollers...");
+        telemetry.update();
+        sleep(3000);
+
+        // Stop rollers
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+        // Stop outtake
+        outtakeleft.setPower(0);
+        outtakeright.setPower(0);
+*/
+        telemetry.addLine("Forward 40...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  45,  45, 2.0);
+        sleep(250);
+
+        outtakeleft.setPower(1.0);
+        outtakeright.setPower(1.0);
+        telemetry.addLine("outtake ON..."); //shoot ball
+        telemetry.update();
+
+        sleep(2500);
+
+        intake.setPower(-1.0);
+        telemetry.addLine("intake ON...");
+        telemetry.update();
+
+        frontWheels.setPower(1.0);
+        backWheels.setPower(1.0);
+        telemetry.addLine("rollers ON...");
+        telemetry.update();
+
+        sleep(3500);
+
+        outtakeleft.setPower(0.0);
+        outtakeright.setPower(0.0);
+        telemetry.addLine("outtake OFF..."); //shoot ball
+        telemetry.update();
+
+        intake.setPower(0.0);
+        telemetry.addLine("intake OFF...");
+        telemetry.update();
+
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+        telemetry.addLine("rollers OFF...");
+        telemetry.update();
+
+        telemetry.addLine("Forward 15...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  15,  15, 2.0);
+
+        telemetry.addLine("Turning Right...");
+        telemetry.update();
+        encoderDrive(TURN_SPEED, 31, -31, 2.0);  // adjust inches to set turn angle
+        //sleep(250);
+
+        intake.setPower(-1.0);
+        telemetry.addLine("intake ON...");
+        telemetry.update();
+
+        frontWheels.setPower(0.25);
+        backWheels.setPower(0.25);
+        telemetry.addLine("rollers ON...");
+        telemetry.update();
+
+        telemetry.addLine("Forward 40...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  40,  40, 2.0);
+        sleep(250);
+
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+        telemetry.addLine("rollers OFF...");
+        telemetry.update();
+
+        intake.setPower(0.0);
+        telemetry.addLine("intake OFF...");
+        telemetry.update();
+
+        telemetry.addLine("Backward 40...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  -40,  -40, 2.0);
+
+        telemetry.addLine("Turning Left...");
+        telemetry.update();
+        encoderDrive(TURN_SPEED, -31, 31, 2.0);  // adjust inches to set turn angle
+        //sleep(250);
+
+        telemetry.addLine("Backward 15...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED,  -15,  -15, 2.0);
+
+        outtakeleft.setPower(1.0);
+        outtakeright.setPower(1.0);
+        telemetry.addLine("outtake ON..."); //shoot ball
+        telemetry.update();
+
+        sleep(1500);
+
+        intake.setPower(-1.0);
+        telemetry.addLine("intake ON...");
+        telemetry.update();
+
+        frontWheels.setPower(1.0);
+        backWheels.setPower(1.0);
+        telemetry.addLine("rollers ON...");
+        telemetry.update();
+
+        sleep(2500);
+
+        outtakeleft.setPower(1.0);
+        outtakeright.setPower(1.0);
+        telemetry.addLine("outtake OFF..."); //shoot ball
+        telemetry.update();
+
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+        telemetry.addLine("rollers OFF...");
+        telemetry.update();
+
+        intake.setPower(0.0);
+        telemetry.addLine("intake OFF...");
+        telemetry.update();
+/*
+        telemetry.addLine("Strafing Left...");
+        telemetry.update();
+        strafeDrive(DRIVE_SPEED, -20, 3.0);   // 20 inches right
+        //sleep(250);
+
+        telemetry.addLine("Forward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, 20, 20, 3.0);
+        //sleep(250);
+
+        telemetry.addLine("Backward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, -20, -20, 3.0);
+        //sleep(250);
+
+        telemetry.addLine("Strafe Left 20...");
+        telemetry.update();
+        strafeDrive(DRIVE_SPEED, -20, 3.0);
+        //sleep(250);
+
+        intake.setPower(1.0);
+
+        telemetry.addLine("Forward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, 20, 20, 3.0);
+        //sleep(250);
+        intake.setPower(1.0);
+
+        telemetry.addLine("Backward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, -20, -20, 3.0);
+        //sleep(250);
+
+        telemetry.addLine("Strafe Left 20...");
+        telemetry.update();
+        strafeDrive(DRIVE_SPEED, -20, 3.0);
+        //sleep(250);
+
+        intake.setPower(1.0);
+        telemetry.addLine("Forward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, 20, 20, 3.0);
+        //sleep(250);
+
+        intake.setPower(0.0);
+        telemetry.addLine("Backward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, -20, -20, 3.0);
+        //sleep(250);
+
+        telemetry.addLine("Strafe Left 20...");
+        telemetry.update();
+        strafeDrive(DRIVE_SPEED, -20, 3.0);
+        //sleep(250);
+
+        intake.setPower(1.0);
+        telemetry.addLine("Forward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, 20, 20, 3.0);
+        //sleep(250);
+
+        intake.setPower(0.0);
+        telemetry.addLine("Backward 20...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, -20, -20, 3.0);
+        //sleep(250);
+*/
+        // Step through each leg of the path,
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        /*encoderDrive(DRIVE_SPEED,  35,  35, 3.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(TURN_SPEED,   16, -16, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -12, -12, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED,  32,  32, 3.0);
+
+        intake.setPower(1.0);
+        telemetry.addLine("Running intake...");
+>>>>>>> ee4241a3b2957cf4ea24bff9ec224a247769979e
+        telemetry.update();
+        sleep(1500);
+
+<<<<<<< HEAD
         outtakeleft.setPower(-1.0);
         outtakeright.setPower(-1.0);
         telemetry.addLine("Running outtake..."); //shoot ball
@@ -434,6 +658,15 @@ public class AutoMode_Hinaa extends LinearOpMode {
         encoderDrive(TURN_SPEED, -31, 31, 2.0);  // adjust inches to set turn angle
         //sleep(250);
 
+        // Step 2: Stop intake
+        intake.setPower(0);
+        sleep(500);
+
+        outtakeleft.setPower(1.0);
+        outtakeright.setPower(1.0);
+        telemetry.addLine("Running outtake..."); //shoot ball
+        telemetry.update();
+        sleep(1500);
 
 /*
         telemetry.addLine("Strafing Left...");
@@ -441,6 +674,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
         strafeDrive(DRIVE_SPEED, -20, 3.0);   // 20 inches right
         //sleep(250);
 */
+
 
 
         telemetry.addData("Path", "Complete");
@@ -680,6 +914,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
         telemetry.addLine("rollers OFF...");
         telemetry.update();
     }
+
 }
 
 

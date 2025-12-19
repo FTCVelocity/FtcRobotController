@@ -15,6 +15,14 @@
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 
+//
+// build.gradle in TeamCode
+//
+
+// Include common definitions from FTC SDK
+apply from: '../build.common.gradle'
+apply from: '../build.dependencies.gradle'
+
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
 
@@ -24,5 +32,22 @@ android {
 }
 
 dependencies {
+    // Standard FTC SDK
     implementation project(':FtcRobotController')
+
+    // Pedro Pathing 2.0.0 library
+    implementation 'com.pedropathing:ftc:2.0.4'
+
+    // Optional local jar
+    //implementation files('libs/pedro-pathing-2.0.0.jar')
 }
+
+repositories {
+    mavenCentral()
+    google()
+    maven { url 'https://mymaven.bylazar.com/releases/' }
+}
+
+
+// Optional: include all jars in libs folder
+// implementation fileTree(dir: 'libs', include: ['*.jar'])

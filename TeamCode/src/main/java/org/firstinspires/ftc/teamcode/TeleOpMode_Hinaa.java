@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -54,11 +53,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleOpMode", group="OpMode")
-public class  TeleOpMode_Hinaa extends LinearOpMode {
+@TeleOp(name = "TeleOpMode", group = "OpMode")
+public class TeleOpMode_Hinaa extends LinearOpMode {
 
+    static final double OUTTAKE_P = 0.544;
+    static final double OUTTAKE_I = 0.0;
+    static final double OUTTAKE_D = 0.0;
+    static final double OUTTAKE_F = 12.103;
+    static final double OUTTAKE_VELOCITY = 1500; // ticks/sec
+    static final double OUTTAKE_P2 = 20.0;
+    static final double OUTTAKE_I2 = 0.0;
+    static final double OUTTAKE_D2 = 0.0;
+    static final double OUTTAKE_F2 = 41.0;
+    static final double OUTTAKE_VELOCITY2 = 2700; // ticks/sec
     // Declare OpMode members for each of the 4 motors.
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontleft = null;
     private DcMotor backleft = null;
     private DcMotor frontright = null;
@@ -68,20 +77,6 @@ public class  TeleOpMode_Hinaa extends LinearOpMode {
     private DcMotorEx outtakeright;
     private CRServo frontWheels;
     private CRServo backWheels;
-
-    static final double OUTTAKE_P = 0.544;
-    static final double OUTTAKE_I = 0.0;
-    static final double OUTTAKE_D = 0.0;
-    static final double OUTTAKE_F = 12.103;
-
-    static final double OUTTAKE_VELOCITY = 1500; // ticks/sec
-
-    static final double OUTTAKE_P2 = 20.0;
-    static final double OUTTAKE_I2 = 0.0;
-    static final double OUTTAKE_D2 = 0.0;
-    static final double OUTTAKE_F2 = 41.0;
-
-    static final double OUTTAKE_VELOCITY2 = 2700; // ticks/sec
 
     @Override
     public void runOpMode() {
@@ -241,24 +236,20 @@ public class  TeleOpMode_Hinaa extends LinearOpMode {
             if (gamepad2.dpad_up) {
                 frontWheels.setPower(1.0);   // forward
 
-            }
-            else if (gamepad2.dpad_down) {
+            } else if (gamepad2.dpad_down) {
                 frontWheels.setPower(-1.0);  // reverse
 
-            }
-            else if (gamepad2.dpad_left || gamepad2.dpad_right) {
+            } else if (gamepad2.dpad_left || gamepad2.dpad_right) {
                 frontWheels.setPower(0.0);   // stop
 
             }
             if (gamepad1.dpad_up) {
                 // forward
                 backWheels.setPower(1.0);
-            }
-            else if (gamepad1.dpad_down) {
+            } else if (gamepad1.dpad_down) {
                 // reverse
                 backWheels.setPower(-1.0);
-            }
-            else if (gamepad1.dpad_left || gamepad2.dpad_right) {
+            } else if (gamepad1.dpad_left || gamepad2.dpad_right) {
                 // stop
                 backWheels.setPower(0.0);
             }

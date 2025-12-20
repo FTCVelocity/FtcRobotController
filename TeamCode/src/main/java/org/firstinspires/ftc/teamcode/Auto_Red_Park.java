@@ -1,11 +1,10 @@
-
 package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-//import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -72,23 +71,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 //@Disabled
-@Autonomous(name="Auto_Red_Park", group="Robot")
+@Autonomous(name = "Auto_Red_Park", group = "Robot")
 //@Disabled
 public class Auto_Red_Park extends LinearOpMode {
-
-    //Declare OpMode members.
-    private DcMotor frontleft   = null;
-    private DcMotor frontright  = null;
-    private DcMotor backleft  = null;
-    private DcMotor backright  = null;
-
-    private DcMotor intake;
-    private DcMotorEx outtakeleft;
-    private DcMotorEx outtakeright;
-
-    private CRServo frontWheels;
-    private CRServo backWheels;
-    private ElapsedTime runtime = new ElapsedTime();
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -96,27 +81,37 @@ public class Auto_Red_Park extends LinearOpMode {
     // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
     // This is gearing DOWN for less speed and more torque.
     // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
-    static final double     COUNTS_PER_MOTOR_REV    = 383.6 ;
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double COUNTS_PER_MOTOR_REV = 383.6;
+    static final double DRIVE_GEAR_REDUCTION = 1.0;     // No External Gearing.
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
+    static final double DRIVE_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
     static final double STRAFE_CORRECTION = 1.08;        // Adjust to fine-tune strafe distance
     static final double COUNTS_PER_DEGREE = 0.87; // STARTING VALUE – MUST TUNE
-
     static final double OUTTAKE_P = 0.544;
     static final double OUTTAKE_I = 0.0;
     static final double OUTTAKE_D = 0.0;
     static final double OUTTAKE_F = 12.103;
     static final double OUTTAKE_VELOCITY = 1500; // ticks/sec
+    //Declare OpMode members.
+    private DcMotor frontleft = null;
+    private DcMotor frontright = null;
+    private DcMotor backleft = null;
+    private DcMotor backright = null;
+    private DcMotor intake;
+    private DcMotorEx outtakeleft;
+    private DcMotorEx outtakeright;
+    private CRServo frontWheels;
+    private CRServo backWheels;
+    private final ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
 
         // Initialize the drive system variables.
-        frontleft  = hardwareMap.get(DcMotor.class, "frontleft");
+        frontleft = hardwareMap.get(DcMotor.class, "frontleft");
         frontright = hardwareMap.get(DcMotor.class, "frontright");
         backleft = hardwareMap.get(DcMotor.class, "backleft");
         backright = hardwareMap.get(DcMotor.class, "backright");
@@ -126,7 +121,6 @@ public class Auto_Red_Park extends LinearOpMode {
         outtakeright = hardwareMap.get(DcMotorEx.class, "outtakeright");
         frontWheels = hardwareMap.get(CRServo.class, "frontWheels");
         backWheels = hardwareMap.get(CRServo.class, "backWheels");
-
 
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -167,7 +161,7 @@ public class Auto_Red_Park extends LinearOpMode {
         backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Starting at",  "%7d :%7d",
+        telemetry.addData("Starting at", "%7d :%7d",
                 frontleft.getCurrentPosition(),
                 frontright.getCurrentPosition(),
                 backleft.getCurrentPosition(),
@@ -181,7 +175,7 @@ public class Auto_Red_Park extends LinearOpMode {
 
         telemetry.addLine("Forward 15...");
         telemetry.update();
-        encoderDrive(DRIVE_SPEED,  15,  15, 2.0);
+        encoderDrive(DRIVE_SPEED, 15, 15, 2.0);
         sleep(250);
 
         telemetry.addData("Path", "Complete");
@@ -214,10 +208,10 @@ public class Auto_Red_Park extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newfrontleftTarget = frontleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newfrontrightTarget = frontright.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newbackleftTarget = backleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newbackrightTarget = backright.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newfrontleftTarget = frontleft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newfrontrightTarget = frontright.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            newbackleftTarget = backleft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newbackrightTarget = backright.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
             frontleft.setTargetPosition(newfrontleftTarget);
             frontright.setTargetPosition(newfrontrightTarget);
             backleft.setTargetPosition(newbackleftTarget);
@@ -244,13 +238,13 @@ public class Auto_Red_Park extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (frontleft.isBusy()|| frontright.isBusy()||
+                    (frontleft.isBusy() || frontright.isBusy() ||
                             backleft.isBusy() || backright.isBusy())) {
 
 
                 // Display it for the driver.
-                telemetry.addData("Running to",  " %7d :%7d", newfrontleftTarget,  newfrontrightTarget);
-                telemetry.addData("Currently at",  " at %7d :%7d",
+                telemetry.addData("Running to", " %7d :%7d", newfrontleftTarget, newfrontrightTarget);
+                telemetry.addData("Currently at", " at %7d :%7d",
                         frontleft.getCurrentPosition(), frontright.getCurrentPosition());
                 telemetry.update();
             }
@@ -271,11 +265,12 @@ public class Auto_Red_Park extends LinearOpMode {
         }
 
     }
+
     public void strafeDrive(double speed, double inches, double timeoutS) {
         int flTarget, frTarget, blTarget, brTarget;
 
         if (opModeIsActive()) {
-            int moveCounts = (int)(inches * COUNTS_PER_INCH * STRAFE_CORRECTION);
+            int moveCounts = (int) (inches * COUNTS_PER_INCH * STRAFE_CORRECTION);
 
             flTarget = frontleft.getCurrentPosition() + moveCounts;
             frTarget = frontright.getCurrentPosition() - moveCounts;
@@ -318,6 +313,7 @@ public class Auto_Red_Park extends LinearOpMode {
             sleep(250);
         }
     }
+
     public void turnRight(double degrees) {
         encoderDrive(
                 TURN_SPEED,
@@ -336,14 +332,14 @@ public class Auto_Red_Park extends LinearOpMode {
         );
     }
 
-    public void pickUpThree(){
+    public void pickUpThree() {
         intake.setPower(-1.0);
         telemetry.addLine("intake ON...");
         telemetry.update();
 
         telemetry.addLine("Forward 30...");
         telemetry.update();
-        encoderDrive(DRIVE_SPEED,  30,  30, 2.0);
+        encoderDrive(DRIVE_SPEED, 30, 30, 2.0);
 
         frontWheels.setPower(0.25);
         backWheels.setPower(0.25);
@@ -353,7 +349,7 @@ public class Auto_Red_Park extends LinearOpMode {
 
         telemetry.addLine("Forward 10...");
         telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
+        encoderDrive(DRIVE_SPEED, 10, 10, 2.0);
         sleep(250);
 
         frontWheels.setPower(0.0);
@@ -368,7 +364,7 @@ public class Auto_Red_Park extends LinearOpMode {
 
         telemetry.addLine("Forward 10...");
         telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
+        encoderDrive(DRIVE_SPEED, 10, 10, 2.0);
         sleep(250);
 
         frontWheels.setPower(0.0);
@@ -378,7 +374,7 @@ public class Auto_Red_Park extends LinearOpMode {
 
         telemetry.addLine("Forward 10...");
         telemetry.update();
-        encoderDrive(DRIVE_SPEED,  10,  10, 2.0);
+        encoderDrive(DRIVE_SPEED, 10, 10, 2.0);
         sleep(250);
 
         frontWheels.setPower(0.1);
@@ -397,7 +393,7 @@ public class Auto_Red_Park extends LinearOpMode {
 
         telemetry.addLine("Backward 60...");
         telemetry.update();
-        encoderDrive(DRIVE_SPEED,  -60,  -60, 2.0);
+        encoderDrive(DRIVE_SPEED, -60, -60, 2.0);
 
         telemetry.addLine("Turning Left...");
         telemetry.update();
@@ -405,7 +401,7 @@ public class Auto_Red_Park extends LinearOpMode {
         //sleep(250);
     }
 
-    public void shootThree(){
+    public void shootThree() {
         outtakeleft.setPower(0.8);
         outtakeright.setPower(0.8);
         telemetry.addLine("outtake ON..."); //shoot ball

@@ -38,7 +38,7 @@ public class LinearOpMode_Harish extends com.qualcomm.robotcore.eventloop.opmode
 
         double drive, turn, strafe;
 
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
             fLeftMotor.setPower(1); // Full power with direction set initially
 
             drive = gamepad1.left_stick_y * -1;

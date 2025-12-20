@@ -10,18 +10,21 @@
 
 
 // Custom definitions may go here
-
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url = 'https://www.matthewo.tech/maven/'
+        }
+    }
+    dependencies {
+        classpath 'org.team11260:fast-load-plugin:0.1.4-beta1'
+    }
+}
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
-
-//
-// build.gradle in TeamCode
-//
-
-// Include common definitions from FTC SDK
-apply from: '../build.common.gradle'
-apply from: '../build.dependencies.gradle'
+apply plugin: 'org.team11260.fast-load-plugin'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
@@ -37,6 +40,7 @@ dependencies {
 
     // Pedro Pathing 2.0.0 library
     implementation 'com.pedropathing:ftc:2.0.4'
+    implementation 'org.team11260:fast-load:0.1.2'
 
     // Optional local jar
     //implementation files('libs/pedro-pathing-2.0.0.jar')
@@ -46,6 +50,9 @@ repositories {
     mavenCentral()
     google()
     maven { url 'https://mymaven.bylazar.com/releases/' }
+    maven {
+        url = 'https://www.matthewo.tech/maven/'
+    }
 }
 
 

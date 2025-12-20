@@ -1,12 +1,12 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.pedro;
 
-import static org.firstinspires.ftc.teamcode.Tuning.changes;
-import static org.firstinspires.ftc.teamcode.Tuning.draw;
-import static org.firstinspires.ftc.teamcode.Tuning.drawOnlyCurrent;
-import static org.firstinspires.ftc.teamcode.Tuning.follower;
-import static org.firstinspires.ftc.teamcode.Tuning.stopRobot;
-import static org.firstinspires.ftc.teamcode.Tuning.telemetryM;
+import static org.firstinspires.ftc.teamcode.pedro.Tuning.changes;
+import static org.firstinspires.ftc.teamcode.pedro.Tuning.draw;
+import static org.firstinspires.ftc.teamcode.pedro.Tuning.drawOnlyCurrent;
+import static org.firstinspires.ftc.teamcode.pedro.Tuning.follower;
+import static org.firstinspires.ftc.teamcode.pedro.Tuning.stopRobot;
+import static org.firstinspires.ftc.teamcode.pedro.Tuning.telemetryM;
 
 import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
@@ -28,7 +28,6 @@ import com.pedropathing.telemetry.SelectableOpMode;
 import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import java.util.ArrayList;
 import java.util.List;

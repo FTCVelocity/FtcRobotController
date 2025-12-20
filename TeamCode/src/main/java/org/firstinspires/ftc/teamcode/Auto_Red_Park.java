@@ -72,9 +72,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 //@Disabled
-@Autonomous(name="Auto_Blue", group="Robot")
+@Autonomous(name="Auto_Red_Park", group="Robot")
 //@Disabled
-public class AutoMode_Hinaa extends LinearOpMode {
+public class Auto_Red_Park extends LinearOpMode {
 
     //Declare OpMode members.
     private DcMotor frontleft   = null;
@@ -178,150 +178,11 @@ public class AutoMode_Hinaa extends LinearOpMode {
         // Wait for the game to start (driver presses START)
         waitForStart();
 
-        telemetry.addLine("Forward 47...");
+
+        telemetry.addLine("Forward 15...");
         telemetry.update();
-        encoderDrive(DRIVE_SPEED,  47,  47, 2.0);
+        encoderDrive(DRIVE_SPEED,  15,  15, 2.0);
         sleep(250);
-
-        telemetry.addLine("Outtake spin-up...");
-        telemetry.update();
-        //.75 seconds
-        runOuttakeSynced(OUTTAKE_VELOCITY, 2.2);
-
-
-        frontWheels.setPower(1.0);
-        backWheels.setPower(1.0);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
-        intake.setPower(-1.0);
-        telemetry.addLine("intake ON...");
-        telemetry.update();
-
-        sleep(3500);
-
-        outtakeleft.setVelocity(0);
-        outtakeright.setVelocity(0);
-        telemetry.addLine("outtake OFF..."); //shoot ball
-        telemetry.update();
-
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-
-        telemetry.addLine("Turning Right 35");
-        telemetry.update();
-        turnRight(35);
-
-        strafeDrive(5, -10, 2.0);
-
-        intake.setPower(-1.0);
-        telemetry.addLine("intake ON...");
-        telemetry.update();
-
-        frontWheels.setPower(0.25);
-        telemetry.addLine("front rollers ON...");
-        telemetry.update();
-
-        telemetry.addLine("Forward 45...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  45,  45, 3.0);
-        sleep(250);
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
-
-        telemetry.addLine("Backward 43...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  -43,  -43, 2.0);
-
-        telemetry.addLine("Turning Left 35");
-        telemetry.update();
-        turnLeft(35);
-
-        telemetry.addLine("Outtake spin-up...");
-        telemetry.update();
-
-        runOuttakeSynced(OUTTAKE_VELOCITY, 2.2);
-
-        intake.setPower(-1.0);
-        telemetry.addLine("intake ON...");
-        telemetry.update();
-        frontWheels.setPower(1.0);
-        backWheels.setPower(1.0);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-
-        sleep(3500);
-
-        outtakeleft.setVelocity(0);
-        outtakeright.setVelocity(0);
-        telemetry.addLine("outtake OFF..."); //shoot ball
-        telemetry.update();
-
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        telemetry.addLine("Turning Right 35");
-        telemetry.update();
-        turnRight(35);
-
-        strafeDrive(5, -20, 2.0);
-
-        intake.setPower(-1.0);
-        telemetry.addLine("intake ON...");
-        telemetry.update();
-
-        frontWheels.setPower(0.25);
-        telemetry.addLine("front rollers ON...");
-        telemetry.update();
-
-        telemetry.addLine("Forward 40...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  40,  40, 2.0);
-        sleep(250);
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
-
-        telemetry.addLine("Backward 40...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED,  -40,  -40, 2.0);
-
-        strafeDrive(5, 20, 2.0);
-
-        telemetry.addLine("Turning Left 35");
-        telemetry.update();
-        turnLeft(35);
-
-        telemetry.addLine("Outtake spin-up...");
-        telemetry.update();
-        //.75 seconds
-        runOuttakeSynced(OUTTAKE_VELOCITY, 2.2);
-
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

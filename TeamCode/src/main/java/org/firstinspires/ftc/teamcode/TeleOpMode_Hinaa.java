@@ -54,7 +54,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleOpMode_Hinaa", group="OpMode")
+@TeleOp(name="TeleOpMode", group="OpMode")
 public class  TeleOpMode_Hinaa extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
@@ -69,31 +69,17 @@ public class  TeleOpMode_Hinaa extends LinearOpMode {
     private CRServo frontWheels;
     private CRServo backWheels;
 
-    static final double OUTTAKE_P = 3.0;
+    static final double OUTTAKE_P = 0.544;
     static final double OUTTAKE_I = 0.0;
     static final double OUTTAKE_D = 0.0;
-    static final double OUTTAKE_F = 13.0;
+    static final double OUTTAKE_F = 12.103;
 
-    static final double OUTTAKE_VELOCITY = 1400; // ticks/sec
+    static final double OUTTAKE_VELOCITY = 1500; // ticks/sec
 
     static final double OUTTAKE_P2 = 20.0;
     static final double OUTTAKE_I2 = 0.0;
     static final double OUTTAKE_D2 = 0.0;
     static final double OUTTAKE_F2 = 41.0;
-
-//    static final double OUTTAKE_VELOCITY2 = 2700; // ticks/sec
-//
-//    static final double OUTTAKE_P = 0.15;
-//    static final double OUTTAKE_I = 0.0;
-//    static final double OUTTAKE_D = 0.0;
-//    static final double OUTTAKE_F = 12.3;
-//
-//    static final double OUTTAKE_VELOCITY = 1400; // ticks/sec
-
-//    static final double OUTTAKE_P2 = 28.0;
-//    static final double OUTTAKE_I2 = 0.0;
-//    static final double OUTTAKE_D2 = 0.0;
-//    static final double OUTTAKE_F2 = 39.5;
 
     static final double OUTTAKE_VELOCITY2 = 2700; // ticks/sec
 
@@ -215,35 +201,41 @@ public class  TeleOpMode_Hinaa extends LinearOpMode {
             intake.setPower(intakePower);
             // Outtake control — press 'A' to run both outtakes, 'B' to reverse
 
-            double outtakeVelocity = 0;
+            double outtakeTargetVelocity = 0;
 
+// LOW GOAL
             if (gamepad2.a) {
-                outtakeVelocity = OUTTAKE_VELOCITY;      // forward
+                outtakeTargetVelocity = OUTTAKE_VELOCITY;
             } else if (gamepad2.b) {
-                outtakeVelocity = -OUTTAKE_VELOCITY;     // reverse
+                outtakeTargetVelocity = -OUTTAKE_VELOCITY;
             }
 
-            outtakeleft.setVelocity(outtakeVelocity);
-            outtakeright.setVelocity(outtakeVelocity);
-
-            if (!gamepad2.a && !gamepad2.b) {
-                outtakeleft.setVelocity(0);
-                outtakeright.setVelocity(0);
-            }
-
+// HIGH GOAL (overrides low)
             if (gamepad2.x) {
-                outtakeVelocity = OUTTAKE_VELOCITY2;      // forward
+                outtakeTargetVelocity = OUTTAKE_VELOCITY2;
             } else if (gamepad2.y) {
-                outtakeVelocity = -OUTTAKE_VELOCITY2;     // reverse
+                outtakeTargetVelocity = -OUTTAKE_VELOCITY2;
+            }
+// Apply velocity
+            outtakeleft.setVelocity(outtakeTargetVelocity);
+            outtakeright.setVelocity(outtakeTargetVelocity);
+
+// Read actual velocities
+            double leftVel = outtakeleft.getVelocity();
+            double rightVel = outtakeright.getVelocity();
+
+// 🔑 Average to sync motors
+            double avgVel = (leftVel + rightVel) / 2.0;
+
+// Optional safety clamp
+            if (Math.abs(avgVel) > Math.abs(outtakeTargetVelocity)) {
+                avgVel = outtakeTargetVelocity;
             }
 
-            outtakeleft.setVelocity(outtakeVelocity);
-            outtakeright.setVelocity(outtakeVelocity);
+            // Apply synced velocity
+            outtakeleft.setVelocity(avgVel);
+            outtakeright.setVelocity(avgVel);
 
-            if (!gamepad2.x && !gamepad2.y) {
-                outtakeleft.setVelocity(0);
-                outtakeright.setVelocity(0);
-            }
 
             // Roller control (CRServo)
             if (gamepad2.dpad_up) {
@@ -284,9 +276,10 @@ public class  TeleOpMode_Hinaa extends LinearOpMode {
             telemetry.addData("Front Wheels Pos", frontWheels.getPower());
             telemetry.addData("Back Wheels Pos", backWheels.getPower());
             telemetry.addData("Intake Power", intakePower);
-            telemetry.addData("Outtake Target", outtakeVelocity);
-            telemetry.addData("Left Vel", outtakeleft.getVelocity());
-            telemetry.addData("Right Vel", outtakeright.getVelocity());
+            telemetry.addData("Outtake Target", outtakeTargetVelocity);
+            telemetry.addData("Left Vel", "%.1f", leftVel);
+            telemetry.addData("Right Vel", "%.1f", rightVel);
+            telemetry.addData("Velocity Δ (R-L)", "%.1f", rightVel - leftVel);
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.update();
         }

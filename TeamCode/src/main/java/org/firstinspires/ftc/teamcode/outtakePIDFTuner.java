@@ -14,7 +14,7 @@ public class outtakePIDFTuner extends OpMode{
     public DcMotorEx outtakeleft;
 
     public double highVelocity = 2700;
-    public double lowVelocity = 1400;
+    public double lowVelocity = 1500;
     double curTargetVelocity = highVelocity;
 
     double F = 0;
@@ -76,14 +76,25 @@ public class outtakePIDFTuner extends OpMode{
         outtakeright.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         outtakeleft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
-        // set velocity
+        // set initial target velocity
         outtakeright.setVelocity(curTargetVelocity);
         outtakeleft.setVelocity(curTargetVelocity);
 
+        // read actual velocities
         double rightVelocity = outtakeright.getVelocity();
         double leftVelocity = outtakeleft.getVelocity();
+
+        // 🔑 FORCE SYNCHRONIZATION (add this)
+        double avgVelocity = (rightVelocity + leftVelocity) / 2.0;
+        outtakeright.setVelocity(avgVelocity);
+        outtakeleft.setVelocity(avgVelocity);
+
+        // recompute errors after syncing
         double righterror = curTargetVelocity - rightVelocity;
         double lefterror = curTargetVelocity - leftVelocity;
+        double velocityDelta = rightVelocity - leftVelocity;
+
+        avgVelocity = Math.min(avgVelocity, curTargetVelocity);
 
         // Telemetry
         telemetry.addData("Target Velocity", curTargetVelocity);

@@ -9,12 +9,12 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 
 @TeleOp
-public class outtakePIDFTuner extends OpMode{
+public class outtakePIDFTuner extends OpMode {
     public DcMotorEx outtakeright;
     public DcMotorEx outtakeleft;
 
     public double highVelocity = 2700;
-    public double lowVelocity = 1400;
+    public double lowVelocity = 1500;
     double curTargetVelocity = highVelocity;
 
     double F = 0;
@@ -23,7 +23,6 @@ public class outtakePIDFTuner extends OpMode{
     double[] stepSizes = {10.0, 1.0, 0.1, 0.001, 0.0001};
 
     int stepIndex = 1;
-
 
 
     @Override
@@ -37,53 +36,67 @@ public class outtakePIDFTuner extends OpMode{
         outtakeright.setDirection(DcMotorSimple.Direction.FORWARD);
         outtakeleft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P,0, 0, F);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 0, 0, F);
         outtakeright.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         outtakeleft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         telemetry.addLine("Init complete");
 
 
     }
+
     @Override
     public void loop() {
         // get all our gamepad commands
         // set target velocity
         //update telemetry
-        if (gamepad1.yWasPressed()){
-            if (curTargetVelocity == highVelocity){
+        if (gamepad1.yWasPressed()) {
+            if (curTargetVelocity == highVelocity) {
                 curTargetVelocity = lowVelocity;
-            } else {curTargetVelocity = highVelocity; }
+            } else {
+                curTargetVelocity = highVelocity;
+            }
         }
-        if (gamepad1.bWasPressed()){
+        if (gamepad1.bWasPressed()) {
             stepIndex = (stepIndex + 1) % stepSizes.length;
 
         }
-        if(gamepad1.dpadLeftWasPressed()) {
+        if (gamepad1.dpadLeftWasPressed()) {
             F -= stepSizes[stepIndex];
         }
-        if(gamepad1.dpadRightWasPressed()) {
+        if (gamepad1.dpadRightWasPressed()) {
             F += stepSizes[stepIndex];
         }
-        if(gamepad1.dpadDownWasPressed()) {
+        if (gamepad1.dpadDownWasPressed()) {
             P -= stepSizes[stepIndex];
         }
-        if(gamepad1.dpadUpWasPressed()) {
+        if (gamepad1.dpadUpWasPressed()) {
             P += stepSizes[stepIndex];
         }
 
         //set now PIDF coefficients
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P,0, 0, F);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 0, 0, F);
         outtakeright.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         outtakeleft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
-        // set velocity
+        // set initial target velocity
         outtakeright.setVelocity(curTargetVelocity);
         outtakeleft.setVelocity(curTargetVelocity);
 
+        // read actual velocities
         double rightVelocity = outtakeright.getVelocity();
         double leftVelocity = outtakeleft.getVelocity();
+
+        // 🔑 FORCE SYNCHRONIZATION (add this)
+        double avgVelocity = (rightVelocity + leftVelocity) / 2.0;
+        outtakeright.setVelocity(avgVelocity);
+        outtakeleft.setVelocity(avgVelocity);
+
+        // recompute errors after syncing
         double righterror = curTargetVelocity - rightVelocity;
         double lefterror = curTargetVelocity - leftVelocity;
+        double velocityDelta = rightVelocity - leftVelocity;
+
+        avgVelocity = Math.min(avgVelocity, curTargetVelocity);
 
         // Telemetry
         telemetry.addData("Target Velocity", curTargetVelocity);

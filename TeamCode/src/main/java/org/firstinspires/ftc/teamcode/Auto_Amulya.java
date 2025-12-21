@@ -9,26 +9,24 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         (name = "Auto_Amulya", group = "Autonomous")
 public class Auto_Amulya extends LinearOpMode {
 
-    // Drive motors
-    private DcMotor frontleft, frontright, backleft, backright;
-    // Intake/outtake motors
-    private DcMotor intake, outtakeleft, outtakeright;
-    private ElapsedTime runtime = new ElapsedTime();
-
     // Constants
     static final double COUNTS_PER_MOTOR_REV = 383.6; // goBILDA 20:1
     static final double DRIVE_GEAR_REDUCTION = 1.0;
     static final double WHEEL_DIAMETER_INCHES = 4.0;
     static final double COUNTS_PER_INCH =
             (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
-
-    // Robot-specific values (tune for your chassis!)
     static final double ROBOT_TRACK_WIDTH_INCHES = 13.0; // Distance between left/right wheels
+
     static final double COUNTS_PER_DEGREE =
             ((Math.PI * ROBOT_TRACK_WIDTH_INCHES) / 360.0) * COUNTS_PER_INCH;
-
+    // Robot-specific values (tune for your chassis!)
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
+    // Drive motors
+    private DcMotor frontleft, frontright, backleft, backright;
+    // Intake/outtake motors
+    private DcMotor intake, outtakeleft, outtakeright;
+    private final ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {

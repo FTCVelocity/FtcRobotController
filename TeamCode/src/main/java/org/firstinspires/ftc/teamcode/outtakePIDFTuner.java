@@ -13,7 +13,7 @@ public class outtakePIDFTuner extends OpMode {
 	public DcMotorEx outtakeleft;
 
 	public double highVelocity = 2700;
-	public double lowVelocity = 1400; // Unified to 1400 from your code updates
+	public double lowVelocity = 1400; // Unified velocity option
 	double curTargetVelocity = highVelocity;
 
 	double F = 0;
@@ -90,6 +90,9 @@ public class outtakePIDFTuner extends OpMode {
 		// Recompute errors after syncing
 		double righterror = curTargetVelocity - rightVelocity;
 		double lefterror = curTargetVelocity - leftVelocity;
+
+		double velocityDelta = rightVelocity - leftVelocity;
+		avgVelocity = Math.min(avgVelocity, curTargetVelocity);
 
 		// Telemetry updates
 		telemetry.addData("Target Velocity", curTargetVelocity);

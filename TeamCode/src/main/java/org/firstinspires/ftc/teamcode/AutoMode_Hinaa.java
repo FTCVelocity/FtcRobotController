@@ -2,50 +2,59 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="AutoMode_Hinaa", group="Robot")
+@Autonomous(name = "Auto_Blue", group = "Robot")
 public class AutoMode_Hinaa extends LinearOpMode {
 
+    // Robot constants & calculations
+    static final double COUNTS_PER_MOTOR_REV = 383.6;
+    static final double DRIVE_GEAR_REDUCTION = 1.0;     // No External Gearing.
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * Math.PI);
+
+    static final double DRIVE_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
+    static final double STRAFE_CORRECTION = 1.08;        // Adjust to fine-tune strafe distance
+    static final double COUNTS_PER_DEGREE = 0.87;        // STARTING VALUE – MUST TUNE
+
+    // Outtake PIDF constants
+    static final double OUTTAKE_P = 0.544;
+    static final double OUTTAKE_I = 0.0;
+    static final double OUTTAKE_D = 0.0;
+    static final double OUTTAKE_F = 12.103;
+    static final double OUTTAKE_VELOCITY = 1500; // ticks/sec
+
     // Declare OpMode members.
-    private DcMotor frontleft   = null;
-    private DcMotor frontright  = null;
-    private DcMotor backleft    = null;
-    private DcMotor backright   = null;
-
+    private DcMotor frontleft = null;
+    private DcMotor frontright = null;
+    private DcMotor backleft = null;
+    private DcMotor backright = null;
     private DcMotor intake;
-    private DcMotor outtakeleft;
-    private DcMotor outtakeright;
-
+    private DcMotorEx outtakeleft;
+    private DcMotorEx outtakeright;
     private CRServo frontWheels;
     private CRServo backWheels;
-    private ElapsedTime runtime = new ElapsedTime();
-
-    // Robot constants & calculations
-    static final double     COUNTS_PER_MOTOR_REV    = 383.6;    // eg: TETRIX / goBILDA Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0;      // No External Gearing.
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0;      // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
-    static final double     STRAFE_CORRECTION       = 1.2;      // Adjust to fine-tune strafe distance
+    private final ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
 
-        // Initialize drive system variables
-        frontleft  = hardwareMap.get(DcMotor.class, "frontleft");
+        // Initialize the drive system variables.
+        frontleft = hardwareMap.get(DcMotor.class, "frontleft");
         frontright = hardwareMap.get(DcMotor.class, "frontright");
-        backleft   = hardwareMap.get(DcMotor.class, "backleft");
-        backright  = hardwareMap.get(DcMotor.class, "backright");
+        backleft = hardwareMap.get(DcMotor.class, "backleft");
+        backright = hardwareMap.get(DcMotor.class, "backright");
 
         // Initialize mechanism hardware
         intake = hardwareMap.get(DcMotor.class, "intake");
-        outtakeleft = hardwareMap.get(DcMotor.class, "outtakeleft");
-        outtakeright = hardwareMap.get(DcMotor.class, "outtakeright");
+        outtakeleft = hardwareMap.get(DcMotorEx.class, "outtakeleft");
+        outtakeright = hardwareMap.get(DcMotorEx.class, "outtakeright");
         frontWheels = hardwareMap.get(CRServo.class, "frontWheels");
         backWheels = hardwareMap.get(CRServo.class, "backWheels");
 
@@ -66,6 +75,16 @@ public class AutoMode_Hinaa extends LinearOpMode {
         frontWheels.setPower(0.0);
         backWheels.setPower(0.0);
 
+        // Configure Outtake PIDF coefficients
+        PIDFCoefficients outtakePIDF =
+                new PIDFCoefficients(OUTTAKE_P, OUTTAKE_I, OUTTAKE_D, OUTTAKE_F);
+
+        outtakeleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        outtakeright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        outtakeleft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, outtakePIDF);
+        outtakeright.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, outtakePIDF);
+
         // Reset and configure encoders
         frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -77,39 +96,156 @@ public class AutoMode_Hinaa extends LinearOpMode {
         backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Send telemetry message to indicate successful initialization
+        telemetry.addData("Starting at", "%7d :%7d",
+                frontleft.getCurrentPosition(),
+                frontright.getCurrentPosition(),
+                backleft.getCurrentPosition(),
+                backright.getCurrentPosition());
         telemetry.addLine("Initialized — waiting for start");
         telemetry.update();
 
-        // Wait for the game to start (driver presses START)
         waitForStart();
 
         if (opModeIsActive()) {
+            telemetry.addLine("Forward 47...");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, 47, 47, 2.0);
+            sleep(250);
 
-            // Step 1: Drive Forward to target zone
+            telemetry.addLine("Outtake spin-up...");
+            telemetry.update();
+            runOuttakeSynced(OUTTAKE_VELOCITY, 2.2);
+
+            frontWheels.setPower(1.0);
+            backWheels.setPower(1.0);
+            telemetry.addLine("rollers ON...");
+            telemetry.update();
+
+            intake.setPower(-1.0);
+            telemetry.addLine("intake ON...");
+            telemetry.update();
+
+            sleep(3500);
+
+            outtakeleft.setVelocity(0);
+            outtakeright.setVelocity(0);
+            telemetry.addLine("outtake OFF...");
+            telemetry.update();
+
+            intake.setPower(0.0);
+            telemetry.addLine("intake OFF...");
+            telemetry.update();
+
+            frontWheels.setPower(0.0);
+            backWheels.setPower(0.0);
+            telemetry.addLine("rollers OFF...");
+            telemetry.update();
+
+            telemetry.addLine("Turning Right 35");
+            telemetry.update();
+            turnRight(35);
+
+            strafeDrive(5, -10, 2.0);
+
+            intake.setPower(-1.0);
+            telemetry.addLine("intake ON...");
+            telemetry.update();
+
+            frontWheels.setPower(0.25);
+            telemetry.addLine("front rollers ON...");
+            telemetry.update();
+
+            telemetry.addLine("Forward 45...");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, 45, 45, 3.0);
+            sleep(250);
+
+            frontWheels.setPower(0.0);
+            backWheels.setPower(0.0);
+            telemetry.addLine("rollers OFF...");
+            telemetry.update();
+
+            intake.setPower(0.0);
+            telemetry.addLine("intake OFF...");
+            telemetry.update();
+
+            telemetry.addLine("Backward 43...");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, -43, -43, 2.0);
+
+            telemetry.addLine("Turning Left 35");
+            telemetry.update();
+            turnLeft(35);
+
+            telemetry.addLine("Outtake spin-up...");
+            telemetry.update();
+            runOuttakeSynced(OUTTAKE_VELOCITY, 2.2);
+
+            intake.setPower(-1.0);
+            telemetry.addLine("intake ON...");
+            telemetry.update();
+            frontWheels.setPower(1.0);
+            backWheels.setPower(1.0);
+            telemetry.addLine("rollers ON...");
+            telemetry.update();
+
+            sleep(3500);
+
+            outtakeleft.setVelocity(0);
+            outtakeright.setVelocity(0);
+            telemetry.addLine("outtake OFF...");
+            telemetry.update();
+
+            intake.setPower(0.0);
+            telemetry.addLine("intake OFF...");
+            telemetry.update();
+
+            frontWheels.setPower(0.0);
+            backWheels.setPower(0.0);
+            telemetry.addLine("rollers OFF...");
+            telemetry.update();
+
+            telemetry.addLine("Turning Right 35");
+            telemetry.update();
+            turnRight(35);
+
+            strafeDrive(5, -20, 2.0);
+
+            intake.setPower(-1.0);
+            telemetry.addLine("intake ON...");
+            telemetry.update();
+
+            frontWheels.setPower(0.25);
+            telemetry.addLine("front rollers ON...");
+            telemetry.update();
+
             telemetry.addLine("Forward 40...");
             telemetry.update();
             encoderDrive(DRIVE_SPEED, 40, 40, 2.0);
             sleep(250);
 
-            // Step 2: Shoot initial pieces
-            shootThree();
-
-            // Step 3: Move and turn toward elements
-            telemetry.addLine("Forward 10...");
+            frontWheels.setPower(0.0);
+            backWheels.setPower(0.0);
+            telemetry.addLine("rollers OFF...");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 10, 10, 2.0);
 
-            telemetry.addLine("Turning Right...");
+            intake.setPower(0.0);
+            telemetry.addLine("intake OFF...");
             telemetry.update();
-            encoderDrive(TURN_SPEED, 31, -31, 2.0);
 
-            telemetry.addLine("Strafe Right 5...");
+            telemetry.addLine("Backward 40...");
             telemetry.update();
-            strafeDrive(DRIVE_SPEED, 5, 3.0);
+            encoderDrive(DRIVE_SPEED, -40, -40, 2.0);
 
-            // Step 4: Pick up next set
-            pickUpThree();
+            strafeDrive(5, 20, 2.0);
+
+            telemetry.addLine("Turning Left 35");
+            telemetry.update();
+            turnLeft(35);
+
+            telemetry.addLine("Outtake spin-up...");
+            telemetry.update();
+            runOuttakeSynced(OUTTAKE_VELOCITY, 2.2);
 
             telemetry.addData("Path", "Complete");
             telemetry.update();
@@ -127,18 +263,16 @@ public class AutoMode_Hinaa extends LinearOpMode {
         int newbackrightTarget;
 
         if (opModeIsActive()) {
-            // Determine new target position
-            newfrontleftTarget = frontleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newfrontrightTarget = frontright.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newbackleftTarget = backleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newbackrightTarget = backright.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newfrontleftTarget = frontleft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newfrontrightTarget = frontright.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            newbackleftTarget = backleft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newbackrightTarget = backright.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
 
             frontleft.setTargetPosition(newfrontleftTarget);
             frontright.setTargetPosition(newfrontrightTarget);
             backleft.setTargetPosition(newbackleftTarget);
             backright.setTargetPosition(newbackrightTarget);
 
-            // Turn On RUN_TO_POSITION
             frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -161,13 +295,11 @@ public class AutoMode_Hinaa extends LinearOpMode {
                 telemetry.update();
             }
 
-            // Stop all motion
             frontleft.setPower(0);
             frontright.setPower(0);
             backleft.setPower(0);
             backright.setPower(0);
 
-            // Turn off RUN_TO_POSITION
             frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -177,12 +309,11 @@ public class AutoMode_Hinaa extends LinearOpMode {
         }
     }
 
-    // Method to strafe using encoders with correction multiplier
     public void strafeDrive(double speed, double inches, double timeoutS) {
         int flTarget, frTarget, blTarget, brTarget;
 
         if (opModeIsActive()) {
-            int moveCounts = (int)(inches * COUNTS_PER_INCH * STRAFE_CORRECTION);
+            int moveCounts = (int) (inches * COUNTS_PER_INCH * STRAFE_CORRECTION);
 
             flTarget = frontleft.getCurrentPosition() + moveCounts;
             frTarget = frontright.getCurrentPosition() - moveCounts;
@@ -226,75 +357,49 @@ public class AutoMode_Hinaa extends LinearOpMode {
         }
     }
 
-    public void pickUpThree() {
-        intake.setPower(-1.0);
-        telemetry.addLine("intake ON...");
-        telemetry.update();
-
-        telemetry.addLine("Forward 30...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED, 30, 30, 2.0);
-
-        frontWheels.setPower(0.25);
-        backWheels.setPower(0.25);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
-        sleep(250);
-
-        telemetry.addLine("Forward 10...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED, 10, 10, 2.0);
-        sleep(250);
-
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
-
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
-
-        telemetry.addLine("Backward 60...");
-        telemetry.update();
-        encoderDrive(DRIVE_SPEED, -60, -60, 2.0);
-
-        telemetry.addLine("Turning Left...");
-        telemetry.update();
-        encoderDrive(TURN_SPEED, -31, 31, 2.0);
+    public void turnRight(double degrees) {
+        encoderDrive(
+                TURN_SPEED,
+                degrees * COUNTS_PER_DEGREE,
+                -degrees * COUNTS_PER_DEGREE,
+                2.0
+        );
     }
 
-    public void shootThree() {
-        outtakeleft.setPower(0.8);
-        outtakeright.setPower(0.8);
-        telemetry.addLine("outtake ON...");
-        telemetry.update();
+    public void turnLeft(double degrees) {
+        encoderDrive(
+                TURN_SPEED,
+                -degrees * COUNTS_PER_DEGREE,
+                degrees * COUNTS_PER_DEGREE,
+                2.0
+        );
+    }
 
-        sleep(1500);
+    public void runOuttakeSynced(double targetVelocity, double durationSeconds) {
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
 
-        frontWheels.setPower(1.0);
-        backWheels.setPower(1.0);
-        telemetry.addLine("rollers ON...");
-        telemetry.update();
+        while (opModeIsActive() && timer.seconds() < durationSeconds) {
+            outtakeleft.setVelocity(targetVelocity);
+            outtakeright.setVelocity(targetVelocity);
 
-        intake.setPower(-0.1);
-        telemetry.addLine("intake ON...");
-        telemetry.update();
+            double leftVel = outtakeleft.getVelocity();
+            double rightVel = outtakeright.getVelocity();
 
-        sleep(3500);
+            double avgVel = (leftVel + rightVel) / 2.0;
 
-        outtakeleft.setPower(0.0);
-        outtakeright.setPower(0.0);
-        telemetry.addLine("outtake OFF...");
-        telemetry.update();
+            if (Math.abs(avgVel) > Math.abs(targetVelocity)) {
+                avgVel = targetVelocity;
+            }
 
-        intake.setPower(0.0);
-        telemetry.addLine("intake OFF...");
-        telemetry.update();
+            outtakeleft.setVelocity(avgVel);
+            outtakeright.setVelocity(avgVel);
 
-        frontWheels.setPower(0.0);
-        backWheels.setPower(0.0);
-        telemetry.addLine("rollers OFF...");
-        telemetry.update();
+            telemetry.addData("Outtake Target", targetVelocity);
+            telemetry.addData("Left Vel", "%.1f", leftVel);
+            telemetry.addData("Right Vel", "%.1f", rightVel);
+            telemetry.addData("Velocity Δ", "%.1f", rightVel - leftVel);
+            telemetry.update();
+        }
     }
 }

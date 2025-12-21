@@ -1,20 +1,31 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="TeleOpMode_Hinaa", group="OpMode")
+@TeleOp(name = "TeleOpMode", group = "OpMode")
 public class TeleOpMode_Hinaa extends LinearOpMode {
 
-    // Declare OpMode members for each of the 4 motors and mechanisms.
-    private ElapsedTime runtime = new ElapsedTime();
+    // Outtake Constants & PIDF tuning values
+    static final double OUTTAKE_P = 0.544;
+    static final double OUTTAKE_I = 0.0;
+    static final double OUTTAKE_D = 0.0;
+    static final double OUTTAKE_F = 12.103;
+    static final double OUTTAKE_VELOCITY = 1500; // ticks/sec (Low Goal)
+
+    static final double OUTTAKE_P2 = 20.0;
+    static final double OUTTAKE_I2 = 0.0;
+    static final double OUTTAKE_D2 = 0.0;
+    static final double OUTTAKE_F2 = 41.0;
+    static final double OUTTAKE_VELOCITY2 = 2700; // ticks/sec (High Goal)
+
+    // Declare OpMode members.
+    private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontleft = null;
     private DcMotor backleft = null;
     private DcMotor frontright = null;
@@ -24,19 +35,6 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
     private DcMotorEx outtakeright;
     private CRServo frontWheels;
     private CRServo backWheels;
-
-    // Outtake PIDF and Velocity Constants
-    static final double OUTTAKE_P = 0.15;
-    static final double OUTTAKE_I = 0.0;
-    static final double OUTTAKE_D = 0.0;
-    static final double OUTTAKE_F = 12.3;
-    static final double OUTTAKE_VELOCITY = 1400; // ticks/sec (Low Speed)
-
-    static final double OUTTAKE_P2 = 28.0;
-    static final double OUTTAKE_I2 = 0.0;
-    static final double OUTTAKE_D2 = 0.0;
-    static final double OUTTAKE_F2 = 39.5;
-    static final double OUTTAKE_VELOCITY2 = 2700; // ticks/sec (High Speed)
 
     @Override
     public void runOpMode() {
@@ -53,7 +51,7 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
         outtakeright = hardwareMap.get(DcMotorEx.class, "outtakeright");
 
         frontWheels = hardwareMap.get(CRServo.class, "frontWheels");
-        backWheels = hardwareMap.get(CRServo.class, "CRServo"); // ensure config matches, or keep as "backWheels"
+        backWheels = hardwareMap.get(CRServo.class, "backWheels");
 
         // Set outtake directions
         outtakeleft.setDirection(DcMotor.Direction.FORWARD);
@@ -126,48 +124,58 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
             double intakePower = rawPower * 0.7;
             intake.setPower(intakePower);
 
-            // Outtake control via Gamepad 2 (A/B for Low Speed, X/Y for High Speed)
-            double outtakeVelocity = 0;
+            // Outtake velocity selection
+            double outtakeTargetVelocity = 0;
 
+            // LOW GOAL (A / B)
             if (gamepad2.a) {
-                outtakeVelocity = OUTTAKE_VELOCITY;       // Forward (Low)
+                outtakeTargetVelocity = OUTTAKE_VELOCITY;
             } else if (gamepad2.b) {
-                outtakeVelocity = -OUTTAKE_VELOCITY;      // Reverse (Low)
-            } else if (gamepad2.x) {
-                outtakeVelocity = OUTTAKE_VELOCITY2;      // Forward (High)
+                outtakeTargetVelocity = -OUTTAKE_VELOCITY;
+            }
+
+            // HIGH GOAL (X / Y - overrides low)
+            if (gamepad2.x) {
+                outtakeTargetVelocity = OUTTAKE_VELOCITY2;
             } else if (gamepad2.y) {
-                outtakeVelocity = -OUTTAKE_VELOCITY2;     // Reverse (High)
+                outtakeTargetVelocity = -OUTTAKE_VELOCITY2;
             }
 
-            outtakeleft.setVelocity(outtakeVelocity);
-            outtakeright.setVelocity(outtakeVelocity);
+            // Apply target velocity
+            outtakeleft.setVelocity(outtakeTargetVelocity);
+            outtakeright.setVelocity(outtakeTargetVelocity);
 
-            // Roller control (CRServo) via Gamepad 2 D-pad
+            // Read actual velocities for synchronization
+            double leftVel = outtakeleft.getVelocity();
+            double rightVel = outtakeright.getVelocity();
+
+            // 🔑 Average to sync motors smoothly
+            double avgVel = (leftVel + rightVel) / 2.0;
+
+            if (Math.abs(avgVel) > Math.abs(outtakeTargetVelocity)) {
+                avgVel = outtakeTargetVelocity;
+            }
+
+            // Apply synced velocity back to motors
+            outtakeleft.setVelocity(avgVel);
+            outtakeright.setVelocity(avgVel);
+
+            // Front Roller control (CRServo) via Gamepad 2
             if (gamepad2.dpad_up) {
-                frontWheels.setPower(1.0);   // Forward
-                backWheels.setPower(1.0);
-            }
-            else if (gamepad2.dpad_down) {
-                frontWheels.setPower(-1.0);  // Reverse
-                backWheels.setPower(-1.0);
-            }
-            else if (gamepad2.dpad_left || gamepad2.dpad_right) {
-                frontWheels.setPower(0.0);   // Stop
-                backWheels.setPower(0.0);
+                frontWheels.setPower(1.0);   // forward
+            } else if (gamepad2.dpad_down) {
+                frontWheels.setPower(-1.0);  // reverse
+            } else if (gamepad2.dpad_left || gamepad2.dpad_right) {
+                frontWheels.setPower(0.0);   // stop
             }
 
-            // Roller control (CRServo) via Gamepad 1 D-pad (Alternative control)
+            // Back Roller control (CRServo) via Gamepad 1
             if (gamepad1.dpad_up) {
-                frontWheels.setPower(1.0);
-                backWheels.setPower(1.0);
-            }
-            else if (gamepad1.dpad_down) {
-                frontWheels.setPower(-1.0);
-                backWheels.setPower(-1.0);
-            }
-            else if (gamepad1.dpad_left || gamepad1.dpad_right) {
-                frontWheels.setPower(0.0);
-                backWheels.setPower(0.0);
+                backWheels.setPower(1.0);   // forward
+            } else if (gamepad1.dpad_down) {
+                backWheels.setPower(-1.0);  // reverse
+            } else if (gamepad1.dpad_left || gamepad1.dpad_right) {
+                backWheels.setPower(0.0);   // stop
             }
 
             // Send calculated power to drive wheels
@@ -183,9 +191,10 @@ public class TeleOpMode_Hinaa extends LinearOpMode {
             telemetry.addData("Front Wheels Pos", frontWheels.getPower());
             telemetry.addData("Back Wheels Pos", backWheels.getPower());
             telemetry.addData("Intake Power", intakePower);
-            telemetry.addData("Outtake Target", outtakeVelocity);
-            telemetry.addData("Left Vel", outtakeleft.getVelocity());
-            telemetry.addData("Right Vel", outtakeright.getVelocity());
+            telemetry.addData("Outtake Target", outtakeTargetVelocity);
+            telemetry.addData("Left Vel", "%.1f", leftVel);
+            telemetry.addData("Right Vel", "%.1f", rightVel);
+            telemetry.addData("Velocity Δ (R-L)", "%.1f", rightVel - leftVel);
             telemetry.update();
         }
     }

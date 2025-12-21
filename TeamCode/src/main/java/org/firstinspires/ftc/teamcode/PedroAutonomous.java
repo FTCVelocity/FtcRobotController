@@ -12,9 +12,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
-@Autonomous(name = "Pedro Pathing Auto 1????", group = "Autonomous")
+@Autonomous(name = "Pedro Pathing Auto2 ??", group = "Autonomous")
 @Configurable // Panels
-public class PedroAuto extends OpMode {
+public class PedroAutonomous extends OpMode {
 
     private TelemetryManager panelsTelemetry; // Panels Telemetry instance
     public Follower follower; // Pedro Pathing follower instance
@@ -61,7 +61,7 @@ public class PedroAuto extends OpMode {
             Path1 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(125.567, 121.878), new Pose(81.118, 85.212))
+                            new BezierLine(new Pose(25.597, 118.814), new Pose(78.016, 71.515))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180))
                     .build();
@@ -70,9 +70,9 @@ public class PedroAuto extends OpMode {
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
-                                    new Pose(81.118, 85.212),
-                                    new Pose(112.867, 81.935),
-                                    new Pose(132.327, 82.959)
+                                    new Pose(78.016, 71.515),
+                                    new Pose(78.221, 67.624),
+                                    new Pose(12.493, 65.372)
                             )
                     )
                     .setTangentHeadingInterpolation()
@@ -81,7 +81,11 @@ public class PedroAuto extends OpMode {
             Path3 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(132.327, 82.959), new Pose(80.708, 85.007))
+                            new BezierCurve(
+                                    new Pose(12.493, 65.372),
+                                    new Pose(89.073, 58.205),
+                                    new Pose(78.221, 71.515)
+                            )
                     )
                     .setTangentHeadingInterpolation()
                     .build();
@@ -90,9 +94,9 @@ public class PedroAuto extends OpMode {
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
-                                    new Pose(80.708, 85.007),
-                                    new Pose(69.032, 54.896),
-                                    new Pose(131.098, 58.788)
+                                    new Pose(78.221, 71.515),
+                                    new Pose(94.192, 27.082),
+                                    new Pose(12.493, 36.091)
                             )
                     )
                     .setTangentHeadingInterpolation()
@@ -102,9 +106,9 @@ public class PedroAuto extends OpMode {
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
-                                    new Pose(131.098, 58.788),
-                                    new Pose(71.081, 54.896),
-                                    new Pose(81.322, 84.802)
+                                    new Pose(12.493, 36.091),
+                                    new Pose(92.554, 35.682),
+                                    new Pose(78.630, 72.539)
                             )
                     )
                     .setTangentHeadingInterpolation()
@@ -114,9 +118,9 @@ public class PedroAuto extends OpMode {
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
-                                    new Pose(81.322, 84.802),
-                                    new Pose(69.852, 26.629),
-                                    new Pose(132.532, 35.642)
+                                    new Pose(78.630, 72.539),
+                                    new Pose(104.840, 2.306),
+                                    new Pose(13.312, 3.125)
                             )
                     )
                     .setTangentHeadingInterpolation()
@@ -126,9 +130,9 @@ public class PedroAuto extends OpMode {
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
-                                    new Pose(132.532, 35.642),
-                                    new Pose(69.032, 26.424),
-                                    new Pose(81.322, 85.826)
+                                    new Pose(13.312, 3.125),
+                                    new Pose(105.659, 14.592),
+                                    new Pose(78.835, 72.539)
                             )
                     )
                     .setTangentHeadingInterpolation()

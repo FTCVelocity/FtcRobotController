@@ -15,10 +15,11 @@ public class Auto_Amulya extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 4.0;
     static final double COUNTS_PER_INCH =
             (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
+    static final double ROBOT_TRACK_WIDTH_INCHES = 13.0; // Distance between left/right wheels
+
     static final double COUNTS_PER_DEGREE =
             ((Math.PI * ROBOT_TRACK_WIDTH_INCHES) / 360.0) * COUNTS_PER_INCH;
     // Robot-specific values (tune for your chassis!)
-    static final double ROBOT_TRACK_WIDTH_INCHES = 13.0; // Distance between left/right wheels
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
     // Drive motors

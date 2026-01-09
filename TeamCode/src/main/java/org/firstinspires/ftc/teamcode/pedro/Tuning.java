@@ -25,8 +25,8 @@ import com.pedropathing.util.PoseHistory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.configuration.Constants;
+import org.firstinspires.ftc.teamcode.Drawing;
 
 import java.util.ArrayList;
 import java.util.List;

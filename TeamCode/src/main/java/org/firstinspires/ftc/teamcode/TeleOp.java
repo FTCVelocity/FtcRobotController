@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.configuration.Settings;
+import org.firstinspires.ftc.teamcode.configuration.Sides;
 import org.firstinspires.ftc.teamcode.hardware.Launcher;
 import org.firstinspires.ftc.teamcode.hardware.System;
 
@@ -39,10 +40,16 @@ public class TeleOp extends LinearOpMode {
 			double yaw = -gamepad1.right_stick_x;
 			if (gamepad1.a || gamepad1.b || gamepad1.x || gamepad1.y) {
 				if (gamepad1.aWasPressed()) {
-					system.follower.holdPoint(Settings.Positions.SIDE == CloseAuto.Side.BLUE ? Settings.Positions.Launch.close : Settings.Positions.Launch.close.mirror());
+					system.follower.holdPoint(Settings.Positions.SIDE == Sides.BLUE ? Settings.Positions.Launch.close : Settings.Positions.Launch.close.mirror());
 				}
 				if (gamepad1.bWasPressed()) {
-					system.follower.holdPoint(Settings.Positions.SIDE == CloseAuto.Side.BLUE ? Settings.Positions.Launch.far : Settings.Positions.Launch.far.mirror());
+					system.follower.holdPoint(Settings.Positions.SIDE == Sides.BLUE ? Settings.Positions.Launch.far : Settings.Positions.Launch.far.mirror());
+				}
+				if (gamepad1.xWasPressed()) {
+					system.follower.holdPoint(Settings.Positions.SIDE == Sides.BLUE ? Settings.Positions.human.HUMAN : Settings.Positions.human.HUMAN.mirror());
+				}
+				if (gamepad1.yWasPressed()) {
+					system.follower.holdPoint(Settings.Positions.SIDE == Sides.BLUE ? Settings.Positions.Endgame.PARK : Settings.Positions.Endgame.PARK.mirror());
 				}
 			} else {
 				if (!system.follower.isTeleopDrive()) {

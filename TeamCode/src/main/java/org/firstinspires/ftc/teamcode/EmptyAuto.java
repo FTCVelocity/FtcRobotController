@@ -16,9 +16,9 @@ import org.firstinspires.ftc.teamcode.configuration.Settings;
 import org.firstinspires.ftc.teamcode.configuration.Sides;
 import org.firstinspires.ftc.teamcode.hardware.System;
 
-@Autonomous(name = "Close Auto", group = "Autonomous", preselectTeleOp = "TeleOp")
+@Autonomous(name = "Empty Auto", group = "Autonomous", preselectTeleOp = "TeleOp")
 @Configurable // Panels
-public class CloseAuto extends OpMode {
+public class EmptyAuto extends OpMode {
 	
 	public Follower follower; // Pedro Pathing follower instance
 	private TelemetryManager panelsTelemetry; // Panels Telemetry instance
@@ -129,6 +129,7 @@ public class CloseAuto extends OpMode {
 	 * waiting for speed, running rollers, and stopping rollers.
 	 * Returns true when launch sequence is complete, false otherwise.
 	 */
+
 	private boolean launch(PathChain launchPath) {
 		switch (launchSubState) {
 			case 0: // Start spinning up launcher and begin path
@@ -259,11 +260,9 @@ public class CloseAuto extends OpMode {
 				pathState = 0; // Reset to start if invalid state
 				break;
 		}
-		
+
 		return pathState;
 	}
-	
-
 	
 	public static class Paths {
 		

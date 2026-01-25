@@ -34,7 +34,7 @@ public class System {
 				hwMap.get(DcMotorEx.class, LAUNCHER_LEFT));
 		rollers = new Rollers(
 				hwMap.get(DcMotor.class, INTAKE),
-				hwMap.get(CRServoImplEx.class, MIDDLE),
+				hwMap.get(DcMotor.class, MIDDLE),
 				hwMap.get(CRServoImplEx.class, END));
 		setupHubs();
 	}

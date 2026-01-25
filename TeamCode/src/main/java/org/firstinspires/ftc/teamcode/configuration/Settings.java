@@ -44,22 +44,23 @@ public class Settings {
 		//public static FarAuto.Side SIDE = FarAuto.Side.BLUE;
 		public static class Starting {
 			public static Pose close = new Pose(22, 125, Math.toRadians(315));
-			public static Pose far = new Pose(55.5, 8  , Math.toRadians(90));
+			public static Pose far = new Pose(60, 7.5  , Math.toRadians(90));
 		}
 		public static class Endgame {
-			public static Pose PARK = new Pose(97.1998, 27.9713, Math.toRadians(90));
+			public static Pose PARK = new Pose(112, 33, Math.toRadians(90));
 		}
 
 		public static class Move {
-			public static Pose move = new Pose(107.58, 14.23, Math.toRadians(90));
+			public static Pose move = new Pose(35, 7.5, Math.toRadians(90));
 		}
 		public static class human {
-			public static Pose HUMAN = new Pose(130, 5, Math.toRadians(90));
+			public static Pose HUMAN = new Pose(130, 7.5, Math.toRadians(90));
 		}
 		public static class Launch {
 			public static Pose close = new Pose(49, 99, Math.toRadians(319));
-			public static Pose far = new Pose(59.5, 114, Math.toRadians(325));
-			//public static Pose far = new Pose(55.5, 8, Math.toRadians(-60));
+			public static Pose far = new Pose(59.5, 120, Math.toRadians(355));
+
+			public static Pose far2 = new Pose(55.5, 8, Math.toRadians(280)) ;
 		}
 		
 		public static class Preset2 {

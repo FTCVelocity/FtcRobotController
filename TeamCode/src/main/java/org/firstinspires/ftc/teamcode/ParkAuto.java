@@ -16,9 +16,9 @@ import org.firstinspires.ftc.teamcode.configuration.Settings;
 import org.firstinspires.ftc.teamcode.configuration.Sides;
 import org.firstinspires.ftc.teamcode.hardware.System;
 
-@Autonomous(name = "Empty Auto", group = "Autonomous", preselectTeleOp = "TeleOp")
+@Autonomous(name = "Park Auto", group = "Autonomous", preselectTeleOp = "TeleOp")
 @Configurable // Panels
-public class EmptyAuto extends OpMode {
+public class ParkAuto extends OpMode {
 	
 	public Follower follower; // Pedro Pathing follower instance
 	private TelemetryManager panelsTelemetry; // Panels Telemetry instance
@@ -178,7 +178,7 @@ public class EmptyAuto extends OpMode {
 		switch (pathState) {
 			case 0: // First launch - from starting position3
 				currentLaunchPath = paths.toLaunchPosition;
-				pathState = 3; // Enter launch sequence
+				pathState = 1; // Enter launch sequence
 				break;
 
 			case 1: // Go to PARK
@@ -188,7 +188,7 @@ public class EmptyAuto extends OpMode {
 
 			case 2: // Moving to PARK
 				if (!follower.isBusy()) {
-					pathState = 4; // Done
+					pathState = 3; // Done
 				}
 			/*
 			case 1: // Go to PRESET_3_PREP
@@ -214,21 +214,22 @@ public class EmptyAuto extends OpMode {
 					pathState = 4; // Enter launch sequence
 				}
 				break;
-*/
+
 			case 3: // Launch sequence (reusable for all three launches)
 				if (launch(currentLaunchPath)) {
 					// Launch complete - determine next state
 					if (currentLaunchPath == paths.toLaunchPosition) {
 						pathState = 1; // First launch done, go to PRESET_3
-					} /*else if (currentLaunchPath == paths.toLaunchPosition2) {
+					} else if (currentLaunchPath == paths.toLaunchPosition2) {
 						pathState = 5; // Second launch done, go to PRESET_2
 					} else if (currentLaunchPath == paths.toLaunchPosition3) {
 						pathState = 8; // Third launch done, go to park
 					else if (currentLaunchPath == paths.toMove) {
 						pathState = 2; // Third launch done, go to park
-					}*/
+					}
 				}
 				break;
+		*/
 /*
 			case 5: // Go to PRESET_2_PREP
 				follower.followPath(paths.toPreset2Prep);
@@ -269,8 +270,9 @@ public class EmptyAuto extends OpMode {
 
 			 */
 
-			case 4: // Done
+			case 3 : // Done
 				break;
+			
 			default:
 				pathState = 0; // Reset to start if invalid state
 				break;

@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.configuration;
-//package org.firstinspires.ftc.teamcode.pedroPathing;
+
 
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
@@ -26,16 +26,16 @@ public class Constants {
 	/* ===================== FOLLOWER ===================== */
 	public static final FollowerConstants FOLLOWER_CONSTANTS =
 			new FollowerConstants()
-					.mass(10.7)
-					.forwardZeroPowerAcceleration(-35.5)
-					.lateralZeroPowerAcceleration(-64.5)
-					
+					.mass(10.98)
+					.forwardZeroPowerAcceleration(-48.78168744585494)
+					.lateralZeroPowerAcceleration(-60.323478035475866)
+
 					.translationalPIDFCoefficients(new PIDFCoefficients(0.09, 0.000001, 0.015, 0.025))
 					.secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.16, 0.00001, 0.01, 0.02))
 					.useSecondaryTranslationalPIDF(true)
-					
-					.headingPIDFCoefficients(new PIDFCoefficients(0.9, 0.0001, 0.015, 0.02))
-					.secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1.8, 0.001, 0.015, 0.025))
+
+					.headingPIDFCoefficients(new PIDFCoefficients(0.9, 0.0001, 0.015, 0.023))
+					.secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1.45, 0.001, 0.015, 0.02))
 					.useSecondaryHeadingPIDF(true)
 					
 					.drivePIDFCoefficients(new FilteredPIDFCoefficients(0.05, 0, 0.0005, 0.6, 0.01))
@@ -49,7 +49,7 @@ public class Constants {
 					0.1,
 					0.009,
 					50,
-					1.5,
+					1.25,
 					10,
 					0.65
 			);
@@ -66,8 +66,8 @@ public class Constants {
 					.rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
 					.rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
 					
-					.xVelocity(78.73)
-					.yVelocity(59.61)
+					.xVelocity(72.36733888641119)
+					.yVelocity(60.81596266378568)
 					.useBrakeModeInTeleOp(true);
 	public static PinpointConstants pinpointConstants = new PinpointConstants()
 			.forwardPodY(0)

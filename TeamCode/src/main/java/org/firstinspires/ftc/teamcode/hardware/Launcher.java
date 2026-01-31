@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.configuration.Settings.Launcher.TIC
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class Launcher {
 	private static final double VELOCITY_ALPHA = 0.15; // EMA smoothing factor (0-1), lower = more smoothing
@@ -26,8 +27,8 @@ public class Launcher {
 		rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		
-		leftMotor.setDirection(DcMotor.Direction.REVERSE);
-		rightMotor.setDirection(DcMotor.Direction.FORWARD);
+		leftMotor.setDirection(DcMotor.Direction.FORWARD);
+		rightMotor.setDirection(DcMotor.Direction.REVERSE);
 		
 		setRPM(FAR_VELOCITY);
 	}

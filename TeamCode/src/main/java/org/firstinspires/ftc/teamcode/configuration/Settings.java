@@ -6,7 +6,7 @@ public class Settings {
 	public static class Rollers {
 		public static double INTAKE_SPEED = 1;
 		public static double INTAKE_STOP = 0;
-		public static double INTAKE_OUT = -1;
+		public static double INTAKE_OUT = -1; 
 		public static double MIDDLE_IN = 1;
 		public static double MIDDLE_STOP = 0;
 		public static double MIDDLE_OUT = -1;
@@ -33,7 +33,7 @@ public class Settings {
 	}
 	
 	public static class Auto {
-		public static double ROLL_TIME = 3.0; // Time in seconds to run rollers
+		public static double ROLL_TIME = 2.0; // Time in seconds to run rollers
 	}
 	
 	public static class Positions {

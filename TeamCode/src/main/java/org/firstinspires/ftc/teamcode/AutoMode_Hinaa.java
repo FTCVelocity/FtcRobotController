@@ -24,14 +24,14 @@ public class AutoMode_Hinaa extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     // Robot constants & calculations
-    static final double COUNTS_PER_MOTOR_REV    = 383.6;    // eg: TETRIX / goBILDA Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION    = 1.0;      // No External Gearing.
-    static final double WHEEL_DIAMETER_INCHES   = 4.0;      // For figuring circumference
-    static final double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double     COUNTS_PER_MOTOR_REV    = 383.6;    // eg: TETRIX / goBILDA Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0;      // No External Gearing.
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0;      // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double DRIVE_SPEED             = 0.6;
-    static final double TURN_SPEED              = 0.5;
-    static final double STRAFE_CORRECTION       = 1.2;      // Adjust to fine-tune strafe distance
+    static final double     DRIVE_SPEED             = 0.6;
+    static final double     TURN_SPEED              = 0.5;
+    static final double     STRAFE_CORRECTION       = 1.2;      // Adjust to fine-tune strafe distance
 
     @Override
     public void runOpMode() {
@@ -86,47 +86,32 @@ public class AutoMode_Hinaa extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            // Step 1: Drive Forward 45 inches
+            // Step 1: Drive Forward to target zone
             telemetry.addLine("Forward 40...");
             telemetry.update();
-            encoderDrive(DRIVE_SPEED, 45, 45, 2.0);
+            encoderDrive(DRIVE_SPEED, 40, 40, 2.0);
             sleep(250);
 
-            // Step 2: Outtake / Shoot
-            outtakeleft.setPower(1.0);
-            outtakeright.setPower(1.0);
-            telemetry.addLine("outtake ON...");
-            telemetry.update();
-            sleep(2500);
+            // Step 2: Shoot initial pieces
+            shootThree();
 
-            // Step 3: Intake and Rollers ON
-            intake.setPower(-1.0);
-            frontWheels.setPower(1.0);
-            backWheels.setPower(1.0);
-            telemetry.addLine("intake & rollers ON...");
+            // Step 3: Move and turn toward elements
+            telemetry.addLine("Forward 10...");
             telemetry.update();
-            sleep(3500);
+            encoderDrive(DRIVE_SPEED, 10, 10, 2.0);
 
-            // Step 4: Turn off mechanisms
-            outtakeleft.setPower(0.0);
-            outtakeright.setPower(0.0);
-            intake.setPower(0.0);
-            frontWheels.setPower(0.0);
-            backWheels.setPower(0.0);
-            telemetry.addLine("All mechanisms OFF");
-            telemetry.update();
-
-            // Step 5: Drive Forward 15 inches
-            telemetry.addLine("Forward 15...");
-            telemetry.update();
-            encoderDrive(DRIVE_SPEED, 15, 15, 2.0);
-
-            // Step 6: Turn Right
             telemetry.addLine("Turning Right...");
             telemetry.update();
             encoderDrive(TURN_SPEED, 31, -31, 2.0);
 
-            telemetry.addLine("Path Complete");
+            telemetry.addLine("Strafe Right 5...");
+            telemetry.update();
+            strafeDrive(DRIVE_SPEED, 5, 3.0);
+
+            // Step 4: Pick up next set
+            pickUpThree();
+
+            telemetry.addData("Path", "Complete");
             telemetry.update();
             sleep(1000);
         }
@@ -239,5 +224,77 @@ public class AutoMode_Hinaa extends LinearOpMode {
             backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             sleep(250);
         }
+    }
+
+    public void pickUpThree() {
+        intake.setPower(-1.0);
+        telemetry.addLine("intake ON...");
+        telemetry.update();
+
+        telemetry.addLine("Forward 30...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, 30, 30, 2.0);
+
+        frontWheels.setPower(0.25);
+        backWheels.setPower(0.25);
+        telemetry.addLine("rollers ON...");
+        telemetry.update();
+        sleep(250);
+
+        telemetry.addLine("Forward 10...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, 10, 10, 2.0);
+        sleep(250);
+
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+        telemetry.addLine("rollers OFF...");
+        telemetry.update();
+
+        intake.setPower(0.0);
+        telemetry.addLine("intake OFF...");
+        telemetry.update();
+
+        telemetry.addLine("Backward 60...");
+        telemetry.update();
+        encoderDrive(DRIVE_SPEED, -60, -60, 2.0);
+
+        telemetry.addLine("Turning Left...");
+        telemetry.update();
+        encoderDrive(TURN_SPEED, -31, 31, 2.0);
+    }
+
+    public void shootThree() {
+        outtakeleft.setPower(0.8);
+        outtakeright.setPower(0.8);
+        telemetry.addLine("outtake ON...");
+        telemetry.update();
+
+        sleep(1500);
+
+        frontWheels.setPower(1.0);
+        backWheels.setPower(1.0);
+        telemetry.addLine("rollers ON...");
+        telemetry.update();
+
+        intake.setPower(-0.1);
+        telemetry.addLine("intake ON...");
+        telemetry.update();
+
+        sleep(3500);
+
+        outtakeleft.setPower(0.0);
+        outtakeright.setPower(0.0);
+        telemetry.addLine("outtake OFF...");
+        telemetry.update();
+
+        intake.setPower(0.0);
+        telemetry.addLine("intake OFF...");
+        telemetry.update();
+
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
+        telemetry.addLine("rollers OFF...");
+        telemetry.update();
     }
 }

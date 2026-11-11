@@ -151,4 +151,3 @@ For ex (on a mac) - `adb push /Users/prahar/StudioProjects/FtcRobotController/Te
 NOTE~~: Do not change the destination path as it won't change for windows/mac.
 In our case the destination path is `/sdcard/FIRST/java/src/org/firstinspires/ftc/teamcode/`
 
-

@@ -1,109 +1,72 @@
-
 package org.firstinspires.ftc.teamcode;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-//import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-//import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-/*
- * This OpMode illustrates the concept of driving a path based on encoder counts.
- * The code is structured as a LinearOpMode
- *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: RobotAutoDriveByTime;
- *
- *  This code ALSO requires that the drive Motors have been configured such that a positive
- *  power command moves them forward, and causes the encoders to count UP.
- *
- *   The desired path in this example is:
- *   - Drive forward for 48 inches
- *   - Spin right for 12 Inches
- *   - Drive Backward for 24 inches
- *   - Stop and close the claw.
- *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
- *  that performs the actual movement.
- *  This method assumes that each movement is relative to the last stopping place.
- *  There are other ways to perform encoder based moves, but this method is probably the simplest.
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
-
-//@Disabled
 @Autonomous(name="AutoMode_Hinaa", group="Robot")
-//@Disabled
 public class AutoMode_Hinaa extends LinearOpMode {
 
+    // Declare OpMode members.
     private DcMotor frontleft   = null;
     private DcMotor frontright  = null;
-    private DcMotor backleft  = null;
-    private DcMotor backright  = null;
-
+    private DcMotor backleft    = null;
+    private DcMotor backright   = null;
 
     private DcMotor intake;
     private DcMotor outtakeleft;
     private DcMotor outtakeright;
+
+    private CRServo frontWheels;
+    private CRServo backWheels;
     private ElapsedTime runtime = new ElapsedTime();
 
-    // Calculate the COUNTS_PER_INCH for your specific drive train.
-    // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
-    // For external drive gearing, set DRIVE_GEAR_REDUCTION as needed.
-    // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
-    // This is gearing DOWN for less speed and more torque.
-    // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
-    static final double     COUNTS_PER_MOTOR_REV    = 383.6 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    // Robot constants & calculations
+    static final double COUNTS_PER_MOTOR_REV    = 383.6;    // eg: TETRIX / goBILDA Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION    = 1.0;      // No External Gearing.
+    static final double WHEEL_DIAMETER_INCHES   = 4.0;      // For figuring circumference
+    static final double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
-    static final double STRAFE_CORRECTION = 1.2;        // Adjust to fine-tune strafe distance
-
-
+    static final double DRIVE_SPEED             = 0.6;
+    static final double TURN_SPEED              = 0.5;
+    static final double STRAFE_CORRECTION       = 1.2;      // Adjust to fine-tune strafe distance
 
     @Override
     public void runOpMode() {
 
-
-        // Initialize the drive system variables.
+        // Initialize drive system variables
         frontleft  = hardwareMap.get(DcMotor.class, "frontleft");
         frontright = hardwareMap.get(DcMotor.class, "frontright");
-        backleft = hardwareMap.get(DcMotor.class, "backleft");
-        backright = hardwareMap.get(DcMotor.class, "backright");
-        // Map hardware
+        backleft   = hardwareMap.get(DcMotor.class, "backleft");
+        backright  = hardwareMap.get(DcMotor.class, "backright");
+
+        // Initialize mechanism hardware
         intake = hardwareMap.get(DcMotor.class, "intake");
         outtakeleft = hardwareMap.get(DcMotor.class, "outtakeleft");
         outtakeright = hardwareMap.get(DcMotor.class, "outtakeright");
+        frontWheels = hardwareMap.get(CRServo.class, "frontWheels");
+        backWheels = hardwareMap.get(CRServo.class, "backWheels");
 
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+        // Set motor directions
         frontleft.setDirection(DcMotor.Direction.REVERSE);
         backleft.setDirection(DcMotor.Direction.REVERSE);
         frontright.setDirection(DcMotor.Direction.FORWARD);
         backright.setDirection(DcMotor.Direction.FORWARD);
-        // Make the two outtakes spin opposite ways
-        outtakeleft.setDirection(DcMotor.Direction.FORWARD);
-        outtakeright.setDirection(DcMotor.Direction.REVERSE);
 
+        // Outtake motor directions
+        outtakeleft.setDirection(DcMotor.Direction.REVERSE);
+        outtakeright.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all powers to zero initially
         intake.setPower(0);
         outtakeleft.setPower(0);
         outtakeright.setPower(0);
+        frontWheels.setPower(0.0);
+        backWheels.setPower(0.0);
 
-
+        // Reset and configure encoders
         frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -114,83 +77,62 @@ public class AutoMode_Hinaa extends LinearOpMode {
         backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Starting at",  "%7d :%7d",
-                frontleft.getCurrentPosition(),
-                frontright.getCurrentPosition(),
-                backleft.getCurrentPosition(),
-                backright.getCurrentPosition());
+        // Send telemetry message to indicate successful initialization
         telemetry.addLine("Initialized — waiting for start");
         telemetry.update();
 
         // Wait for the game to start (driver presses START)
         waitForStart();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        //encoderDrive(DRIVE_SPEED,  35,  35, 3.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   16, -16, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -58, -58, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED,   -16, 16, 2.0);  // S2: Turn Left 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED,  25,  25, 3.0);//move forward
+        if (opModeIsActive()) {
 
-        intake.setPower(1.0);
+            // Step 1: Drive Forward 45 inches
+            telemetry.addLine("Forward 40...");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, 45, 45, 2.0);
+            sleep(250);
 
-        telemetry.addLine("Running intake...");
-        telemetry.update();
-        sleep(2000);
+            // Step 2: Outtake / Shoot
+            outtakeleft.setPower(1.0);
+            outtakeright.setPower(1.0);
+            telemetry.addLine("outtake ON...");
+            telemetry.update();
+            sleep(2500);
 
-        encoderDrive(DRIVE_SPEED,  3,  3, 3.0);//move forward 3 inches
+            // Step 3: Intake and Rollers ON
+            intake.setPower(-1.0);
+            frontWheels.setPower(1.0);
+            backWheels.setPower(1.0);
+            telemetry.addLine("intake & rollers ON...");
+            telemetry.update();
+            sleep(3500);
 
+            // Step 4: Turn off mechanisms
+            outtakeleft.setPower(0.0);
+            outtakeright.setPower(0.0);
+            intake.setPower(0.0);
+            frontWheels.setPower(0.0);
+            backWheels.setPower(0.0);
+            telemetry.addLine("All mechanisms OFF");
+            telemetry.update();
 
-        // Step 2: Stop intake
-        intake.setPower(0);
-        sleep(500);
+            // Step 5: Drive Forward 15 inches
+            telemetry.addLine("Forward 15...");
+            telemetry.update();
+            encoderDrive(DRIVE_SPEED, 15, 15, 2.0);
 
-        intake.setPower(1.0);
+            // Step 6: Turn Right
+            telemetry.addLine("Turning Right...");
+            telemetry.update();
+            encoderDrive(TURN_SPEED, 31, -31, 2.0);
 
-        telemetry.addLine("Running intake...");
-        telemetry.update();
-        sleep(2000);
-
-        encoderDrive(DRIVE_SPEED,  3,  3, 3.0);//move forward 3 inches
-
-
-        // Step 2: Stop intake
-        intake.setPower(0);
-        sleep(500);
-
-        intake.setPower(1.0);
-
-        telemetry.addLine("Running intake...");
-        telemetry.update();
-        sleep(2000);
-
-        encoderDrive(DRIVE_SPEED,  3,  3, 3.0);//move forward 3 inches
-
-
-
-        // Step 2: Stop intake
-        intake.setPower(0);
-        sleep(500);
-
-        encoderDrive(DRIVE_SPEED,  35,  35, 3.0);
-        strafeDrive(DRIVE_SPEED, 12, 3.0);   // Strafe right 12 inches
-        strafeDrive(DRIVE_SPEED, -12, 2.0);  // Strafe left 12 inches
-
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-        sleep(1000);  // pause to display final telemetry message.
+            telemetry.addLine("Path Complete");
+            telemetry.update();
+            sleep(1000);
+        }
     }
 
-//     *  Method to perform a relative move, based on encoder counts.
-//     *  Encoders are not reset as the move is based on the current position.
-//     *  Move will stop if any of three conditions occur:
-//     *  1) Move gets to the desired position
-//     *  2) Move runs out of time
-//     *  3) Driver stops the OpMode running.
-
+    // Method to perform a relative move based on encoder counts
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
@@ -199,22 +141,17 @@ public class AutoMode_Hinaa extends LinearOpMode {
         int newbackleftTarget;
         int newbackrightTarget;
 
-
-        // Ensure that the OpMode is still active
         if (opModeIsActive()) {
-
-
-
-            // Determine new target position, and pass to motor controller
+            // Determine new target position
             newfrontleftTarget = frontleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             newfrontrightTarget = frontright.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             newbackleftTarget = backleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             newbackrightTarget = backright.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+
             frontleft.setTargetPosition(newfrontleftTarget);
             frontright.setTargetPosition(newfrontrightTarget);
             backleft.setTargetPosition(newbackleftTarget);
             backright.setTargetPosition(newbackrightTarget);
-
 
             // Turn On RUN_TO_POSITION
             frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -222,42 +159,28 @@ public class AutoMode_Hinaa extends LinearOpMode {
             backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
-            // reset the timeout time and start motion.
             runtime.reset();
             frontleft.setPower(Math.abs(speed));
             frontright.setPower(Math.abs(speed));
             backleft.setPower(Math.abs(speed));
             backright.setPower(Math.abs(speed));
 
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (frontleft.isBusy()|| frontright.isBusy()||
+                    (frontleft.isBusy() || frontright.isBusy() ||
                             backleft.isBusy() || backright.isBusy())) {
 
-
-
-                // Display it for the driver.
-                telemetry.addData("Running to",  " %7d :%7d", newfrontleftTarget,  newfrontrightTarget);
-                telemetry.addData("Currently at",  " at %7d :%7d",
+                telemetry.addData("Running to", " %7d :%7d", newfrontleftTarget, newfrontrightTarget);
+                telemetry.addData("Currently at", " at %7d :%7d",
                         frontleft.getCurrentPosition(), frontright.getCurrentPosition());
                 telemetry.update();
             }
 
-
-            // Stop all motion;
+            // Stop all motion
             frontleft.setPower(0);
             frontright.setPower(0);
             backleft.setPower(0);
             backright.setPower(0);
-
 
             // Turn off RUN_TO_POSITION
             frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -265,18 +188,16 @@ public class AutoMode_Hinaa extends LinearOpMode {
             backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
-            sleep(250);   // optional pause after each move.
+            sleep(250);
         }
-
     }
+
+    // Method to strafe using encoders with correction multiplier
     public void strafeDrive(double speed, double inches, double timeoutS) {
         int flTarget, frTarget, blTarget, brTarget;
 
-
         if (opModeIsActive()) {
             int moveCounts = (int)(inches * COUNTS_PER_INCH * STRAFE_CORRECTION);
-
 
             flTarget = frontleft.getCurrentPosition() + moveCounts;
             frTarget = frontright.getCurrentPosition() - moveCounts;
@@ -299,7 +220,6 @@ public class AutoMode_Hinaa extends LinearOpMode {
             backleft.setPower(Math.abs(speed));
             backright.setPower(Math.abs(speed));
 
-
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (frontleft.isBusy() || frontright.isBusy() || backleft.isBusy() || backright.isBusy())) {
@@ -308,12 +228,10 @@ public class AutoMode_Hinaa extends LinearOpMode {
                 telemetry.update();
             }
 
-
             frontleft.setPower(0);
             frontright.setPower(0);
             backleft.setPower(0);
             backright.setPower(0);
-
 
             frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -323,4 +241,3 @@ public class AutoMode_Hinaa extends LinearOpMode {
         }
     }
 }
-

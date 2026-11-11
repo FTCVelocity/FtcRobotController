@@ -11,11 +11,14 @@ import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.configurables.annotations.IgnoreConfigurable;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import com.bylazar.field.FieldManager;
 import com.bylazar.field.PanelsField;
 import com.bylazar.field.Style;
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
@@ -32,11 +35,17 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.firstinspires.ftc.teamcode.configuration.Constants;
 import org.firstinspires.ftc.teamcode.Drawing;
 
 =======
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+import org.firstinspires.ftc.teamcode.Drawing;
+import org.firstinspires.ftc.teamcode.configuration.Constants;
+
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +59,9 @@ import java.util.List;
 @TeleOp(name = "Tuning", group = "Pedro Pathing")
 public class Tuning extends SelectableOpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static Follower follower;
 	
 	@IgnoreConfigurable
@@ -132,6 +144,7 @@ public class Tuning extends SelectableOpMode {
 	@Override
 	public void onLog(List<String> lines) {
 	}
+<<<<<<< HEAD
 =======
     public static Follower follower;
 
@@ -216,6 +229,8 @@ public class Tuning extends SelectableOpMode {
     public void onLog(List<String> lines) {
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -229,6 +244,9 @@ public class Tuning extends SelectableOpMode {
  */
 class LocalizationTest extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	@Override
 	public void init() {
 		follower.setStartingPose(new Pose(72, 72));
@@ -269,6 +287,7 @@ class LocalizationTest extends OpMode {
 		
 		draw();
 	}
+<<<<<<< HEAD
 =======
     @Override
     public void init() {
@@ -311,6 +330,8 @@ class LocalizationTest extends OpMode {
         draw();
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -328,6 +349,9 @@ class LocalizationTest extends OpMode {
  */
 class ForwardTuner extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double DISTANCE = 48;
 	
 	@Override
@@ -362,6 +386,7 @@ class ForwardTuner extends OpMode {
 		
 		draw();
 	}
+<<<<<<< HEAD
 =======
     public static double DISTANCE = 48;
 
@@ -398,6 +423,8 @@ class ForwardTuner extends OpMode {
         draw();
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -415,6 +442,9 @@ class ForwardTuner extends OpMode {
  */
 class LateralTuner extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double DISTANCE = 48;
 	
 	@Override
@@ -449,6 +479,7 @@ class LateralTuner extends OpMode {
 		
 		draw();
 	}
+<<<<<<< HEAD
 =======
     public static double DISTANCE = 48;
 
@@ -485,6 +516,8 @@ class LateralTuner extends OpMode {
         draw();
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -502,6 +535,9 @@ class LateralTuner extends OpMode {
  */
 class TurnTuner extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double ANGLE = 2 * Math.PI;
 	
 	@Override
@@ -537,6 +573,7 @@ class TurnTuner extends OpMode {
 		
 		draw();
 	}
+<<<<<<< HEAD
 =======
     public static double ANGLE = 2 * Math.PI;
 
@@ -574,6 +611,8 @@ class TurnTuner extends OpMode {
         draw();
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -593,6 +632,9 @@ class TurnTuner extends OpMode {
  */
 class ForwardVelocityTuner extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double DISTANCE = 48;
 	public static double RECORD_NUMBER = 10;
 	private final ArrayList<Double> velocities = new ArrayList<>();
@@ -684,6 +726,7 @@ class ForwardVelocityTuner extends OpMode {
 			}
 		}
 	}
+<<<<<<< HEAD
 =======
     public static double DISTANCE = 48;
     public static double RECORD_NUMBER = 10;
@@ -777,6 +820,8 @@ class ForwardVelocityTuner extends OpMode {
         }
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -796,6 +841,9 @@ class ForwardVelocityTuner extends OpMode {
  */
 class LateralVelocityTuner extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double DISTANCE = 48;
 	public static double RECORD_NUMBER = 10;
 	private final ArrayList<Double> velocities = new ArrayList<>();
@@ -879,6 +927,7 @@ class LateralVelocityTuner extends OpMode {
 			}
 		}
 	}
+<<<<<<< HEAD
 =======
     public static double DISTANCE = 48;
     public static double RECORD_NUMBER = 10;
@@ -964,6 +1013,8 @@ class LateralVelocityTuner extends OpMode {
         }
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -983,6 +1034,9 @@ class LateralVelocityTuner extends OpMode {
  */
 class ForwardZeroPowerAccelerationTuner extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double VELOCITY = 75;
 	private final ArrayList<Double> accelerations = new ArrayList<>();
 	private double previousVelocity;
@@ -1074,6 +1128,7 @@ class ForwardZeroPowerAccelerationTuner extends OpMode {
 			}
 		}
 	}
+<<<<<<< HEAD
 =======
     public static double VELOCITY = 75;
     private final ArrayList<Double> accelerations = new ArrayList<>();
@@ -1167,6 +1222,8 @@ class ForwardZeroPowerAccelerationTuner extends OpMode {
         }
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -1186,6 +1243,9 @@ class ForwardZeroPowerAccelerationTuner extends OpMode {
  */
 class LateralZeroPowerAccelerationTuner extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double VELOCITY = 50;
 	private final ArrayList<Double> accelerations = new ArrayList<>();
 	private double previousVelocity;
@@ -1276,6 +1336,7 @@ class LateralZeroPowerAccelerationTuner extends OpMode {
 			}
 		}
 	}
+<<<<<<< HEAD
 =======
     public static double VELOCITY = 50;
     private final ArrayList<Double> accelerations = new ArrayList<>();
@@ -1368,6 +1429,8 @@ class LateralZeroPowerAccelerationTuner extends OpMode {
         }
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -1382,6 +1445,9 @@ class LateralZeroPowerAccelerationTuner extends OpMode {
  */
 class TranslationalTuner extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double DISTANCE = 40;
 	private boolean forward = true;
 	
@@ -1441,6 +1507,7 @@ class TranslationalTuner extends OpMode {
 		telemetryM.addData("Error Y", follower.errorCalculator.getTranslationalError().getYComponent());
 		telemetryM.update(telemetry);
 	}
+<<<<<<< HEAD
 =======
     public static double DISTANCE = 40;
     private boolean forward = true;
@@ -1502,6 +1569,8 @@ class TranslationalTuner extends OpMode {
         telemetryM.update(telemetry);
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -1517,6 +1586,9 @@ class TranslationalTuner extends OpMode {
  */
 class HeadingTuner extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double DISTANCE = 40;
 	private boolean forward = true;
 	
@@ -1577,6 +1649,7 @@ class HeadingTuner extends OpMode {
 		telemetryM.addData("Error", follower.errorCalculator.getHeadingError());
 		telemetryM.update(telemetry);
 	}
+<<<<<<< HEAD
 =======
     public static double DISTANCE = 40;
     private boolean forward = true;
@@ -1639,6 +1712,8 @@ class HeadingTuner extends OpMode {
         telemetryM.update(telemetry);
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -1652,6 +1727,9 @@ class HeadingTuner extends OpMode {
  */
 class DriveTuner extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double DISTANCE = 40;
 	private boolean forward = true;
 	
@@ -1721,6 +1799,7 @@ class DriveTuner extends OpMode {
 		telemetryM.addData("Error", follower.errorCalculator.getDriveErrors()[1]);
 		telemetryM.update(telemetry);
 	}
+<<<<<<< HEAD
 =======
     public static double DISTANCE = 40;
     private boolean forward = true;
@@ -1792,6 +1871,8 @@ class DriveTuner extends OpMode {
         telemetryM.update(telemetry);
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -1806,6 +1887,9 @@ class DriveTuner extends OpMode {
  */
 class Line extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double DISTANCE = 40;
 	private boolean forward = true;
 	
@@ -1861,6 +1945,7 @@ class Line extends OpMode {
 		telemetryM.debug("Driving Forward?: " + forward);
 		telemetryM.update(telemetry);
 	}
+<<<<<<< HEAD
 =======
     public static double DISTANCE = 40;
     private boolean forward = true;
@@ -1918,6 +2003,8 @@ class Line extends OpMode {
         telemetryM.update(telemetry);
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -1935,6 +2022,9 @@ class Line extends OpMode {
  */
 class CentripetalTuner extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double DISTANCE = 20;
 	private boolean forward = true;
 	
@@ -1993,6 +2083,7 @@ class CentripetalTuner extends OpMode {
 		telemetryM.debug("Driving away from the origin along the curve?: " + forward);
 		telemetryM.update(telemetry);
 	}
+<<<<<<< HEAD
 =======
     public static double DISTANCE = 20;
     private boolean forward = true;
@@ -2053,6 +2144,8 @@ class CentripetalTuner extends OpMode {
         telemetryM.update(telemetry);
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -2065,6 +2158,9 @@ class CentripetalTuner extends OpMode {
  */
 class Triangle extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	
 	private final Pose startPose = new Pose(72, 72, Math.toRadians(0));
 	private final Pose interPose = new Pose(24 + 72, -24 + 72, Math.toRadians(90));
@@ -2118,6 +2214,7 @@ class Triangle extends OpMode {
 		
 		follower.followPath(triangle);
 	}
+<<<<<<< HEAD
 =======
 
     private final Pose startPose = new Pose(72, 72, Math.toRadians(0));
@@ -2173,6 +2270,8 @@ class Triangle extends OpMode {
         follower.followPath(triangle);
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }
 
 /**
@@ -2188,6 +2287,9 @@ class Triangle extends OpMode {
  */
 class Circle extends OpMode {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 	public static double RADIUS = 10;
 	private PathChain circle;
 	
@@ -2233,6 +2335,7 @@ class Circle extends OpMode {
 			follower.followPath(circle);
 		}
 	}
+<<<<<<< HEAD
 =======
     public static double RADIUS = 10;
     private PathChain circle;
@@ -2426,4 +2529,6 @@ class Drawing {
         panelsField.update();
     }
 >>>>>>> 35bce40 (merge into master (#4))
+=======
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 }

@@ -34,7 +34,11 @@ public class System {
 				hwMap.get(DcMotorEx.class, LAUNCHER_LEFT));
 		rollers = new Rollers(
 				hwMap.get(DcMotor.class, INTAKE),
+<<<<<<< HEAD
 				hwMap.get(DcMotor.class, MIDDLE),
+=======
+				hwMap.get(CRServoImplEx.class, MIDDLE),
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 				hwMap.get(CRServoImplEx.class, END));
 		setupHubs();
 	}

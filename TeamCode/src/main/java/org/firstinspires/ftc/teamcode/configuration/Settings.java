@@ -2,6 +2,11 @@ package org.firstinspires.ftc.teamcode.configuration;
 
 import com.pedropathing.geometry.Pose;
 
+<<<<<<< HEAD
+=======
+import org.firstinspires.ftc.teamcode.CloseAuto;
+
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 public class Settings {
 	public static class Rollers {
 		public static double INTAKE_SPEED = 1;
@@ -38,6 +43,7 @@ public class Settings {
 	
 	public static class Positions {
 		public static Pose STORED_POSE = new Pose(72, 72, Math.toRadians(90));
+<<<<<<< HEAD
 		public static Sides SIDE = Sides.BLUE;
 
 
@@ -73,6 +79,30 @@ public class Settings {
 			public static Pose END = new Pose(12, 84, Math.toRadians(180));
 		}
 
+=======
+		public static CloseAuto.Side SIDE = CloseAuto.Side.BLUE;
+		
+		public static class Starting {
+			public static Pose close = new Pose(22, 125, Math.toRadians(315));
+			public static Pose far = new Pose(55.5, 8, Math.toRadians(90));
+		}
+		
+		public static class Launch {
+			public static Pose close = new Pose(57., 92, Math.toRadians(315));
+			public static Pose far = new Pose(55.5, 8, Math.toRadians(135));
+		}
+		
+		public static class Preset2 {
+			public static Pose PREP = new Pose(41, 60, Math.toRadians(180));
+			public static Pose END = new Pose(12, 60, Math.toRadians(180));
+		}
+		
+		public static class Preset3 {
+			public static Pose PREP = new Pose(41, 84, Math.toRadians(180));
+			public static Pose END = new Pose(12, 84, Math.toRadians(180));
+		}
+		
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 		public static class Park {
 			public static Pose close = new Pose(56, 110, 0); // TODO: Set actual park position
 		}

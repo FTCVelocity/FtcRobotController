@@ -16,11 +16,19 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class Rollers {
 	public final DcMotor intake;
+<<<<<<< HEAD
 	public final DcMotor middle;
 	public final CRServoImplEx end;
 	
 	public Rollers(
 			DcMotor intake, DcMotor middle, CRServoImplEx end) {
+=======
+	public final CRServoImplEx middle;
+	public final CRServoImplEx end;
+	
+	public Rollers(
+			DcMotor intake, CRServoImplEx middle, CRServoImplEx end) {
+>>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 		this.intake = intake;
 		this.middle = middle;
 		this.end = end;

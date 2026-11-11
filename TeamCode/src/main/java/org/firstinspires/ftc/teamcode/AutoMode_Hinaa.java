@@ -6,35 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
- /*Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -67,17 +38,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
-*/
+
 //@Disabled
 @Autonomous(name="AutoMode_Hinaa", group="Robot")
 //@Disabled
 public class AutoMode_Hinaa extends LinearOpMode {
 
-     //Declare OpMode members.
     private DcMotor frontleft   = null;
     private DcMotor frontright  = null;
     private DcMotor backleft  = null;
     private DcMotor backright  = null;
+
 
     private DcMotor intake;
     private DcMotor outtakeleft;
@@ -100,8 +71,10 @@ public class AutoMode_Hinaa extends LinearOpMode {
     static final double STRAFE_CORRECTION = 1.2;        // Adjust to fine-tune strafe distance
 
 
+
     @Override
     public void runOpMode() {
+
 
         // Initialize the drive system variables.
         frontleft  = hardwareMap.get(DcMotor.class, "frontleft");
@@ -113,8 +86,6 @@ public class AutoMode_Hinaa extends LinearOpMode {
         outtakeleft = hardwareMap.get(DcMotor.class, "outtakeleft");
         outtakeright = hardwareMap.get(DcMotor.class, "outtakeright");
 
-
-
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -125,6 +96,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
         // Make the two outtakes spin opposite ways
         outtakeleft.setDirection(DcMotor.Direction.FORWARD);
         outtakeright.setDirection(DcMotor.Direction.REVERSE);
+
 
         // Set all powers to zero initially
         intake.setPower(0);
@@ -174,22 +146,18 @@ public class AutoMode_Hinaa extends LinearOpMode {
         strafeDrive(DRIVE_SPEED, 12, 3.0);   // Strafe right 12 inches
         strafeDrive(DRIVE_SPEED, -12, 2.0);  // Strafe left 12 inches
 
-
-
-
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);  // pause to display final telemetry message.
     }
 
-/*
-     *  Method to perform a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the OpMode running.
-*/
+//     *  Method to perform a relative move, based on encoder counts.
+//     *  Encoders are not reset as the move is based on the current position.
+//     *  Move will stop if any of three conditions occur:
+//     *  1) Move gets to the desired position
+//     *  2) Move runs out of time
+//     *  3) Driver stops the OpMode running.
+
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
@@ -198,8 +166,11 @@ public class AutoMode_Hinaa extends LinearOpMode {
         int newbackleftTarget;
         int newbackrightTarget;
 
+
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
+
+
 
             // Determine new target position, and pass to motor controller
             newfrontleftTarget = frontleft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
@@ -211,11 +182,13 @@ public class AutoMode_Hinaa extends LinearOpMode {
             backleft.setTargetPosition(newbackleftTarget);
             backright.setTargetPosition(newbackrightTarget);
 
+
             // Turn On RUN_TO_POSITION
             frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
             // reset the timeout time and start motion.
             runtime.reset();
@@ -223,6 +196,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
             frontright.setPower(Math.abs(speed));
             backleft.setPower(Math.abs(speed));
             backright.setPower(Math.abs(speed));
+
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -236,6 +210,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
                             backleft.isBusy() || backright.isBusy())) {
 
 
+
                 // Display it for the driver.
                 telemetry.addData("Running to",  " %7d :%7d", newfrontleftTarget,  newfrontrightTarget);
                 telemetry.addData("Currently at",  " at %7d :%7d",
@@ -243,17 +218,20 @@ public class AutoMode_Hinaa extends LinearOpMode {
                 telemetry.update();
             }
 
+
             // Stop all motion;
             frontleft.setPower(0);
             frontright.setPower(0);
             backleft.setPower(0);
             backright.setPower(0);
 
+
             // Turn off RUN_TO_POSITION
             frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
             sleep(250);   // optional pause after each move.
         }
@@ -262,8 +240,10 @@ public class AutoMode_Hinaa extends LinearOpMode {
     public void strafeDrive(double speed, double inches, double timeoutS) {
         int flTarget, frTarget, blTarget, brTarget;
 
+
         if (opModeIsActive()) {
             int moveCounts = (int)(inches * COUNTS_PER_INCH * STRAFE_CORRECTION);
+
 
             flTarget = frontleft.getCurrentPosition() + moveCounts;
             frTarget = frontright.getCurrentPosition() - moveCounts;
@@ -286,6 +266,7 @@ public class AutoMode_Hinaa extends LinearOpMode {
             backleft.setPower(Math.abs(speed));
             backright.setPower(Math.abs(speed));
 
+
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (frontleft.isBusy() || frontright.isBusy() || backleft.isBusy() || backright.isBusy())) {
@@ -294,10 +275,12 @@ public class AutoMode_Hinaa extends LinearOpMode {
                 telemetry.update();
             }
 
+
             frontleft.setPower(0);
             frontright.setPower(0);
             backleft.setPower(0);
             backright.setPower(0);
+
 
             frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -306,6 +289,5 @@ public class AutoMode_Hinaa extends LinearOpMode {
             sleep(250);
         }
     }
-
 }
 

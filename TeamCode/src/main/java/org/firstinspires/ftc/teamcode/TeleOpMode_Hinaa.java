@@ -1,15 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.robot.Robot;
-import java.util.Set;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /* Copyright (c) 2021 FIRST. All rights reserved.
@@ -55,10 +47,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/OpMode_Hinaa.java
 
 @TeleOp(name="OpMode_Hinaa.java", group="OpMode")
 @Disabled
 public class OpMode_Hinaa extends com.qualcomm.robotcore.eventloop.opmode.OpMode {
+=======
+@TeleOp(name="TeleOpMode_Hinaa", group="OpMode")
+public class TeleOpMode_Hinaa extends LinearOpMode {
+>>>>>>> 2f746e9 (fixed strafeleft in auto_amulya and commited hinaas files):TeamCode/src/main/java/org/firstinspires/ftc/teamcode/TeleOpMode_Hinaa.java
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -66,6 +63,10 @@ public class OpMode_Hinaa extends com.qualcomm.robotcore.eventloop.opmode.OpMode
     private DcMotor backleft = null;
     private DcMotor frontright = null;
     private DcMotor backright = null;
+    private DcMotor intake;
+    private DcMotor outtakeleft;
+    private DcMotor outtakeright;
+
 
     //@Override
     public void runOpMode() {
@@ -141,6 +142,14 @@ public class OpMode_Hinaa extends com.qualcomm.robotcore.eventloop.opmode.OpMode
         backleft = hardwareMap.get(DcMotor.class, "backleft");
         frontright = hardwareMap.get(DcMotor.class, "frontright");
         backright = hardwareMap.get(DcMotor.class, "backright");
+        // Map motors to config names in the RC configuration
+        intake = hardwareMap.get(DcMotor.class, "intake");
+        outtakeleft = hardwareMap.get(DcMotor.class, "outtakeleft");
+        outtakeright = hardwareMap.get(DcMotor.class, "outtakeright");
+
+        // Set directions (one of the outtakes should spin opposite)
+        outtakeleft.setDirection(DcMotor.Direction.FORWARD);
+        outtakeright.setDirection(DcMotor.Direction.REVERSE);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!

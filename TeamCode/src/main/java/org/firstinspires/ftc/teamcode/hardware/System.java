@@ -24,8 +24,7 @@ public class System {
 	public Launcher launcher;
 	public Rollers rollers;
 	public Follower follower;
-	
-	
+
 	public System(HardwareMap hwMap) {
 		allHubs = hwMap.getAll(LynxModule.class);
 		follower = Constants.createFollower(hwMap);
@@ -34,28 +33,24 @@ public class System {
 				hwMap.get(DcMotorEx.class, LAUNCHER_LEFT));
 		rollers = new Rollers(
 				hwMap.get(DcMotor.class, INTAKE),
-<<<<<<< HEAD
-				hwMap.get(DcMotor.class, MIDDLE),
-=======
 				hwMap.get(CRServoImplEx.class, MIDDLE),
->>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 				hwMap.get(CRServoImplEx.class, END));
 		setupHubs();
 	}
-	
+
 	public void update() {
 		updateHubs();
 		follower.update();
 		launcher.update();
 	}
-	
+
 	public void setupHubs() {
 		for (LynxModule hub : allHubs) {
 			hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
 			hub.setConstant(Color.MAGENTA);
 		}
 	}
-	
+
 	public void updateHubs() {
 		for (LynxModule hub : allHubs) {
 			hub.clearBulkCache();

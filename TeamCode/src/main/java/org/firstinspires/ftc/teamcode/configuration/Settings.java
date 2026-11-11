@@ -2,14 +2,6 @@ package org.firstinspires.ftc.teamcode.configuration;
 
 import com.pedropathing.geometry.Pose;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import org.firstinspires.ftc.teamcode.CloseAuto;
-
->>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
-=======
->>>>>>> 3ff8035 (Pedro + misc changes (#6))
 public class Settings {
 	public static class Rollers {
 		public static double INTAKE_SPEED = 1;
@@ -22,7 +14,7 @@ public class Settings {
 		public static double END_STOP = 0;
 		public static double END_OUT = -1;
 	}
-	
+
 	public static class Hardware {
 		public static String PINPOINT = "pinpoint";
 		public static String LAUNCHER_LEFT = "outtakeleft";
@@ -30,35 +22,28 @@ public class Settings {
 		public static String INTAKE = "intake";
 		public static String MIDDLE = "middleWheels";
 		public static String END = "finalWheels";
-		
 	}
-	
+
 	public static class Launcher {
 		public static double CLOSE_VELOCITY = 2500;
 		public static double FAR_VELOCITY = 3500;
 		public static double MAX_SPEED_ERROR = 50;
 		public static double TICKS_PER_REVOLUTION = 28;
 	}
-	
+
 	public static class Auto {
 		public static double ROLL_TIME = 3.0; // Time in seconds to run rollers
 	}
-	
+
 	public static class Positions {
 		public static Pose STORED_POSE = new Pose(72, 72, Math.toRadians(90));
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3ff8035 (Pedro + misc changes (#6))
 		public static Sides SIDE = Sides.BLUE;
 
-
-		//public static FarAuto.Side SIDE = FarAuto.Side.BLUE;
-<<<<<<< HEAD
 		public static class Starting {
 			public static Pose close = new Pose(22, 125, Math.toRadians(315));
-			public static Pose far = new Pose(60, 7.5  , Math.toRadians(90));
+			public static Pose far = new Pose(60, 7.5, Math.toRadians(90));
 		}
+
 		public static class Endgame {
 			public static Pose PARK = new Pose(112, 33, Math.toRadians(90));
 		}
@@ -66,66 +51,27 @@ public class Settings {
 		public static class Move {
 			public static Pose move = new Pose(35, 7.5, Math.toRadians(90));
 		}
+
 		public static class human {
 			public static Pose HUMAN = new Pose(130, 7.5, Math.toRadians(90));
 		}
+
 		public static class Launch {
 			public static Pose close = new Pose(49, 99, Math.toRadians(319));
 			public static Pose far = new Pose(59.5, 120, Math.toRadians(355));
-
-			public static Pose far2 = new Pose(55.5, 8, Math.toRadians(280)) ;
+			public static Pose far2 = new Pose(55.5, 8, Math.toRadians(280));
 		}
-		
+
 		public static class Preset2 {
 			public static Pose PREP = new Pose(45, 60, Math.toRadians(180));
-			public static Pose END = new Pose(5 , 60, Math.toRadians(180));
+			public static Pose END = new Pose(5, 60, Math.toRadians(180));
 		}
-		
+
 		public static class Preset3 {
 			public static Pose PREP = new Pose(45, 84, Math.toRadians(180));
 			public static Pose END = new Pose(12, 84, Math.toRadians(180));
 		}
 
-=======
-		public static CloseAuto.Side SIDE = CloseAuto.Side.BLUE;
-		
-=======
->>>>>>> 3ff8035 (Pedro + misc changes (#6))
-		public static class Starting {
-			public static Pose close = new Pose(22, 125, Math.toRadians(315));
-			public static Pose far = new Pose(55.5, 8  , Math.toRadians(90));
-		}
-		public static class Endgame {
-			public static Pose PARK = new Pose(97.1998, 27.9713, Math.toRadians(90));
-		}
-
-		public static class Move {
-			public static Pose move = new Pose(107.58, 14.23, Math.toRadians(90));
-		}
-		public static class human {
-			public static Pose HUMAN = new Pose(130, 5, Math.toRadians(90));
-		}
-		public static class Launch {
-			public static Pose close = new Pose(49, 99, Math.toRadians(319));
-			public static Pose far = new Pose(59.5, 114, Math.toRadians(325));
-			//public static Pose far = new Pose(55.5, 8, Math.toRadians(-60));
-		}
-		
-		public static class Preset2 {
-			public static Pose PREP = new Pose(45, 60, Math.toRadians(180));
-			public static Pose END = new Pose(5 , 60, Math.toRadians(180));
-		}
-		
-		public static class Preset3 {
-			public static Pose PREP = new Pose(45, 84, Math.toRadians(180));
-			public static Pose END = new Pose(12, 84, Math.toRadians(180));
-		}
-<<<<<<< HEAD
-		
->>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
-=======
-
->>>>>>> 3ff8035 (Pedro + misc changes (#6))
 		public static class Park {
 			public static Pose close = new Pose(56, 110, 0); // TODO: Set actual park position
 		}

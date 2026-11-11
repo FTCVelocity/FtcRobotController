@@ -16,61 +16,53 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class Rollers {
 	public final DcMotor intake;
-<<<<<<< HEAD
-	public final DcMotor middle;
-	public final CRServoImplEx end;
-	
-	public Rollers(
-			DcMotor intake, DcMotor middle, CRServoImplEx end) {
-=======
 	public final CRServoImplEx middle;
 	public final CRServoImplEx end;
-	
+
 	public Rollers(
 			DcMotor intake, CRServoImplEx middle, CRServoImplEx end) {
->>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 		this.intake = intake;
 		this.middle = middle;
 		this.end = end;
-		
+
 		intake.setDirection(DcMotorSimple.Direction.REVERSE);
 		intake.setPower(INTAKE_STOP);
 		middle.setPower(MIDDLE_STOP);
 		end.setPower(END_STOP);
 	}
-	
+
 	public void intakeIn() {
 		intake.setPower(INTAKE_SPEED);
 	}
-	
+
 	public void intakeStop() {
 		intake.setPower(INTAKE_STOP);
 	}
-	
+
 	public void intakeOut() {
 		intake.setPower(INTAKE_OUT);
 	}
-	
+
 	public void middleIn() {
 		middle.setPower(MIDDLE_IN);
 	}
-	
+
 	public void middleStop() {
 		middle.setPower(MIDDLE_STOP);
 	}
-	
+
 	public void middleOut() {
 		middle.setPower(MIDDLE_OUT);
 	}
-	
+
 	public void endIn() {
 		end.setPower(END_IN);
 	}
-	
+
 	public void endStop() {
 		end.setPower(END_STOP);
 	}
-	
+
 	public void endOut() {
 		end.setPower(END_OUT);
 	}

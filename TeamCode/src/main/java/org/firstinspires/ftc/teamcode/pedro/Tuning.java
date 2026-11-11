@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.firstinspires.ftc.teamcode.configuration.Constants;
 import org.firstinspires.ftc.teamcode.Drawing;
 
@@ -43,7 +44,10 @@ import org.firstinspires.ftc.teamcode.Drawing;
 >>>>>>> 35bce40 (merge into master (#4))
 =======
 import org.firstinspires.ftc.teamcode.Drawing;
+=======
+>>>>>>> 3ff8035 (Pedro + misc changes (#6))
 import org.firstinspires.ftc.teamcode.configuration.Constants;
+import org.firstinspires.ftc.teamcode.Drawing;
 
 >>>>>>> 1bf7adb (Code Intensive: Finished close auto, added new System management for organization (#5))
 import java.util.ArrayList;

@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.configuration.Settings;
+import org.firstinspires.ftc.teamcode.configuration.Sides;
 import org.firstinspires.ftc.teamcode.hardware.System;
 
 @Autonomous(name = "Close Auto", group = "Autonomous", preselectTeleOp = "TeleOp")
@@ -46,11 +47,11 @@ public class CloseAuto extends OpMode {
 		// Wait for side selection via gamepad
 		if (!sideSelected) {
 			if (gamepad1.a || gamepad2.a) {
-				Settings.Positions.SIDE = Side.BLUE;
+				Settings.Positions.SIDE = Sides.BLUE;
 				sideSelected = true;
 				initializePaths();
 			} else if (gamepad1.b || gamepad2.b) {
-				Settings.Positions.SIDE = Side.RED;
+				Settings.Positions.SIDE = Sides.RED;
 				sideSelected = true;
 				initializePaths();
 			} else {
@@ -79,7 +80,7 @@ public class CloseAuto extends OpMode {
 	private void initializePaths() {
 		// Mirror starting pose if RED side
 		Pose startPose = Settings.Positions.Starting.close;
-		if (Settings.Positions.SIDE == Side.RED) {
+		if (Settings.Positions.SIDE == Sides.RED) {
 			startPose = mirrorPose(startPose);
 		}
 		follower.setStartingPose(startPose);
@@ -262,11 +263,6 @@ public class CloseAuto extends OpMode {
 		return pathState;
 	}
 
-	public enum Side {
-		BLUE,
-		RED
-	}
-
 	public static class Paths {
 
 		public PathChain toLaunchPosition;
@@ -278,9 +274,9 @@ public class CloseAuto extends OpMode {
 		public PathChain toLaunchPosition3;
 		public PathChain toPark;
 
-		public Paths(Follower follower, CloseAuto.Side side) {
+		public Paths(Follower follower, Sides side) {
 			// Helper to get pose (mirrored if RED)
-			java.util.function.Function<Pose, Pose> getPose = pose -> side == CloseAuto.Side.RED
+			java.util.function.Function<Pose, Pose> getPose = pose -> side == Sides.RED
 					? mirrorPose(pose)
 					: pose;
 

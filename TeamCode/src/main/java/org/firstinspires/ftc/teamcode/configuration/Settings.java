@@ -4,7 +4,7 @@ import com.pedropathing.geometry.Pose;
 
 public class Settings {
 	public static class Rollers {
-		public static double INTAKE_SPEED = 1;
+		public static double INTAKE_SPEED = 0.4;
 		public static double INTAKE_STOP = 0;
 		public static double INTAKE_OUT = -1; 
 		public static double MIDDLE_IN = 1;
@@ -26,8 +26,8 @@ public class Settings {
 	}
 	
 	public static class Launcher {
-		public static double CLOSE_VELOCITY = 2500;
-		public static double FAR_VELOCITY = 3500;
+		public static double CLOSE_VELOCITY = 2650;
+		public static double FAR_VELOCITY = 3600;
 		public static double MAX_SPEED_ERROR = 50;
 		public static double TICKS_PER_REVOLUTION = 28;
 	}
@@ -43,11 +43,12 @@ public class Settings {
 
 		//public static FarAuto.Side SIDE = FarAuto.Side.BLUE;
 		public static class Starting {
-			public static Pose close = new Pose(22, 125, Math.toRadians(315));
+			public static Pose close = new Pose(24, 127, Math.toRadians(318
+			));
 			public static Pose far = new Pose(60, 7.5  , Math.toRadians(90));
 		}
 		public static class Endgame {
-			public static Pose PARK = new Pose(112, 33, Math.toRadians(90));
+			public static Pose PARK = new Pose(103.5, 34.5, Math.toRadians(90));
 		}
 
 		public static class Move {

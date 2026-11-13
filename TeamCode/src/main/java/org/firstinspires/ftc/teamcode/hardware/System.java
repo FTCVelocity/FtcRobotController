@@ -18,40 +18,56 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.configuration.Constants;
 
 import java.util.List;
+//import java.util.Objects;
 
 public class System {
 	private final List<LynxModule> allHubs;
 	public Launcher launcher;
 	public Rollers rollers;
 	public Follower follower;
-	
-	
+
+
 	public System(HardwareMap hwMap) {
 		allHubs = hwMap.getAll(LynxModule.class);
+
+		// Required: drive motors + Pinpoint (inside createFollower) and the intake.
+		// hwMap.get(...) stops the OpMode with an error if the name is not configured.
 		follower = Constants.createFollower(hwMap);
+
+		// Optional (PHASE 1: not on the robot yet). hwMap.tryGet(...) returns null
+		// instead of crashing when the name is not in the robot configuration.
 		launcher = new Launcher(
-				hwMap.get(DcMotorEx.class, LAUNCHER_RIGHT),
-				hwMap.get(DcMotorEx.class, LAUNCHER_LEFT));
+				hwMap.tryGet(DcMotorEx.class, LAUNCHER_RIGHT),
+				hwMap.tryGet(DcMotorEx.class, LAUNCHER_LEFT));
+
 		rollers = new Rollers(
-				hwMap.get(DcMotor.class, INTAKE),
-				hwMap.get(DcMotor.class, MIDDLE),
-				hwMap.get(CRServoImplEx.class, END));
+				hwMap.tryGet(DcMotor.class, INTAKE),
+                //Objects.requireNonNull(hwMap.tryGet(DcMotor.class, INTAKE)),
+				hwMap.tryGet(DcMotor.class, MIDDLE),
+				hwMap.tryGet(CRServoImplEx.class, END));
 		setupHubs();
 	}
-	
+
+	/** One line for telemetry showing which optional parts were found. */
+	public String installedSummary() {
+		return "Launcher " + (launcher.isInstalled() ? "yes" : "no")
+				+ " | Middle " + (rollers.hasMiddle() ? "yes" : "no")
+				+ " | End " + (rollers.hasEnd() ? "yes" : "no");
+	}
+
 	public void update() {
 		updateHubs();
 		follower.update();
 		launcher.update();
 	}
-	
+
 	public void setupHubs() {
 		for (LynxModule hub : allHubs) {
 			hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
 			hub.setConstant(Color.MAGENTA);
 		}
 	}
-	
+
 	public void updateHubs() {
 		for (LynxModule hub : allHubs) {
 			hub.clearBulkCache();

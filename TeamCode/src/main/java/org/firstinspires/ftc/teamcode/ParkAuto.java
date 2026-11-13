@@ -10,16 +10,18 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.configuration.Settings;
 import org.firstinspires.ftc.teamcode.configuration.Sides;
 import org.firstinspires.ftc.teamcode.hardware.System;
 
+@Disabled // PHASE 1: hidden from the Driver Hub list. Delete this line to bring it back.
 @Autonomous(name = "Park Auto", group = "Autonomous", preselectTeleOp = "TeleOp")
 @Configurable // Panels
 public class ParkAuto extends OpMode {
-	
+
 	public Follower follower; // Pedro Pathing follower instance
 	private TelemetryManager panelsTelemetry; // Panels Telemetry instance
 	private int pathState; // Current autonomous path state (state machine)
@@ -36,12 +38,12 @@ public class ParkAuto extends OpMode {
 		panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 		Drawing.init();
 		follower = system.follower;
-		
+
 		// Side selection will happen in init_loop
 		panelsTelemetry.debug("Status", "Waiting for side selection...");
 		panelsTelemetry.update(telemetry);
 	}
-	
+
 	@Override
 	public void init_loop() {
 		// Wait for side selection via gamepad
@@ -60,12 +62,12 @@ public class ParkAuto extends OpMode {
 				return;
 			}
 		}
-		
+
 		panelsTelemetry.debug("Side", Settings.Positions.SIDE.toString());
 		panelsTelemetry.debug("Status", "Ready - Press Play");
 		panelsTelemetry.update(telemetry);
 	}
-	
+
 	/**
 	 * Mirrors a pose across the field center (x=72)
 	 * X: 144 - x, Heading: π - heading
@@ -76,7 +78,7 @@ public class ParkAuto extends OpMode {
 				pose.getY(),
 				Math.PI - pose.getHeading());
 	}
-	
+
 	private void initializePaths() {
 		// Mirror starting pose if RED side
 		Pose startPose = Settings.Positions.Starting.far;
@@ -84,13 +86,13 @@ public class ParkAuto extends OpMode {
 			startPose = mirrorPose(startPose);
 		}
 		follower.setStartingPose(startPose);
-		
+
 		// Build paths (will mirror poses if RED side)
 		paths = new Paths(follower, Settings.Positions.SIDE);
-		
+
 		pathState = 0; // Initialize state machine to start
 		launchSubState = 0; // Initialize launch sub-state
-		
+
 		panelsTelemetry.debug("Status", "Initialized - " + Settings.Positions.SIDE + " side");
 		Drawing.drawRobot(follower.getPose());
 		Drawing.update();
@@ -104,7 +106,7 @@ public class ParkAuto extends OpMode {
 			telemetry.update();
 			return;
 		}
-		
+
 		system.update();
 		pathState = autonomousPathUpdate(); // Update autonomous state machine
 
@@ -118,12 +120,12 @@ public class ParkAuto extends OpMode {
 		Drawing.drawDebug(follower);
 		Drawing.update();
 	}
-	
+
 	@Override
 	public void stop() {
 		STORED_POSE = follower.getPose();
 	}
-	
+
 	/**
 	 * Launch sequence helper function - handles spinning up, moving to launch,
 	 * waiting for speed, running rollers, and stopping rollers.
@@ -138,13 +140,13 @@ public class ParkAuto extends OpMode {
 				follower.followPath(launchPath);
 				launchSubState = 1;
 				return false;
-			
+
 			case 1: // Moving to launch position (launcher spinning up in parallel)
 				if (!follower.isBusy()) {
 					launchSubState = 2; // Wait for launcher to reach speed
 				}
 				return false;
-			
+
 			case 2: // Wait until launcher is at speed
 				if (system.launcher.isAtSpeed()) {
 					// Start all three rollers spinning
@@ -155,7 +157,7 @@ public class ParkAuto extends OpMode {
 					launchSubState = 3;
 				}
 				return false;
-			
+
 			case 3: // Rollers spinning - wait for ROLL_TIME
 				if (getRuntime() - rollStartTime >= Settings.Auto.ROLL_TIME) {
 					// Stop all rollers
@@ -166,13 +168,13 @@ public class ParkAuto extends OpMode {
 					return true; // Launch complete
 				}
 				return false;
-			
+
 			default:
 				launchSubState = 0;
 				return false;
 		}
 	}
-	
+
 	public int autonomousPathUpdate() {
 		// State machine for Close Auto - easy to extend
 		switch (pathState) {
@@ -272,7 +274,7 @@ public class ParkAuto extends OpMode {
 
 			case 3 : // Done
 				break;
-			
+
 			default:
 				pathState = 0; // Reset to start if invalid state
 				break;
@@ -280,9 +282,9 @@ public class ParkAuto extends OpMode {
 
 		return pathState;
 	}
-	
+
 	public static class Paths {
-		
+
 		public PathChain toLaunchPosition;
 		public PathChain toMove;
 		public PathChain toPreset3Prep;
@@ -292,13 +294,13 @@ public class ParkAuto extends OpMode {
 		public PathChain toPreset2End;
 		public PathChain toLaunchPosition3;
 		public PathChain toPark;
-		
+
 		public Paths(Follower follower, Sides side) {
 			// Helper to get pose (mirrored if RED)
 			java.util.function.Function<Pose, Pose> getPose = pose -> side == Sides.RED
 					? mirrorPose(pose)
 					: pose;
-			
+
 			// Path from starting position to launch position
 			toLaunchPosition = follower
 					.pathBuilder()
@@ -318,7 +320,7 @@ public class ParkAuto extends OpMode {
 									getPose.apply(Settings.Positions.Starting.far),
 									getPose.apply(Settings.Positions.Move.move)))
 					.setLinearHeadingInterpolation(getPose.apply(Settings.Positions.Starting.far).getHeading(),
-					getPose.apply(Settings.Positions.Move.move).getHeading())
+							getPose.apply(Settings.Positions.Move.move).getHeading())
 					.build();
 
 			// Path from starting position to move
@@ -343,7 +345,7 @@ public class ParkAuto extends OpMode {
 							getPose.apply(Settings.Positions.Preset3.PREP).getHeading())
 					.setTangentHeadingInterpolation()
 					.build();
-			
+
 			// Path from PRESET_3_PREP to PRESET_3_END
 			toPreset3End = follower
 					.pathBuilder()
@@ -353,7 +355,7 @@ public class ParkAuto extends OpMode {
 									getPose.apply(Settings.Positions.Preset3.END)))
 					.setTangentHeadingInterpolation()
 					.build();
-			
+
 			// Path from PRESET_3_END back to launch position
 			toLaunchPosition2 = follower
 					.pathBuilder()
@@ -364,7 +366,7 @@ public class ParkAuto extends OpMode {
 					.setLinearHeadingInterpolation(getPose.apply(Settings.Positions.Preset3.END).getHeading(),
 							getPose.apply(Settings.Positions.Launch.close).getHeading())
 					.build();
-			
+
 			// Path from launch position to PRESET_2_PREP
 			toPreset2Prep = follower
 					.pathBuilder()
@@ -375,7 +377,7 @@ public class ParkAuto extends OpMode {
 					.setLinearHeadingInterpolation(getPose.apply(Settings.Positions.Launch.close).getHeading(),
 							getPose.apply(Settings.Positions.Preset2.PREP).getHeading())
 					.build();
-			
+
 			// Path from PRESET_2_PREP to PRESET_2_END
 			toPreset2End = follower
 					.pathBuilder()
@@ -385,7 +387,7 @@ public class ParkAuto extends OpMode {
 									getPose.apply(Settings.Positions.Preset2.END)))
 					.setTangentHeadingInterpolation()
 					.build();
-			
+
 			// Path from PRESET_2_END back to launch position
 			toLaunchPosition3 = follower
 					.pathBuilder()
@@ -396,7 +398,7 @@ public class ParkAuto extends OpMode {
 					.setLinearHeadingInterpolation(getPose.apply(Settings.Positions.Preset2.END).getHeading(),
 							getPose.apply(Settings.Positions.Launch.close).getHeading())
 					.build();
-			
+
 			// Path from launch position to PARK
 			toPark = follower
 					.pathBuilder()
@@ -407,7 +409,7 @@ public class ParkAuto extends OpMode {
 					.setTangentHeadingInterpolation()
 					.build();
 		}
-		
+
 		/**
 		 * Mirrors a pose across the field center (x=72)
 		 * X: 144 - x, Heading: π - heading

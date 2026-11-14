@@ -28,9 +28,9 @@ public class Rollers {
 
 	public final DcMotor intake;
 	public final DcMotor middle;
-	public final CRServoImplEx end;
+	public final DcMotor end;      // was CRServoImplEx
 
-	public Rollers(DcMotor intake, DcMotor middle, CRServoImplEx end) {
+	public Rollers(DcMotor intake, DcMotor middle, DcMotor end) {   // was CRServoImplEx end
 		this.intake = intake;
 		this.middle = middle;
 		this.end = end;
@@ -41,7 +41,10 @@ public class Rollers {
 		}
 
 		if (middle != null) middle.setPower(MIDDLE_STOP);
-		if (end != null) end.setPower(END_STOP);
+		if (end != null) {
+			end.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+			end.setPower(END_STOP);
+		}
 	}
 
 	public boolean hasIntake() {

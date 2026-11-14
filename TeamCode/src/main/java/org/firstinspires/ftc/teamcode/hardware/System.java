@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.configuration.Settings.Hardware.INT
 import static org.firstinspires.ftc.teamcode.configuration.Settings.Hardware.LAUNCHER_LEFT;
 import static org.firstinspires.ftc.teamcode.configuration.Settings.Hardware.LAUNCHER_RIGHT;
 import static org.firstinspires.ftc.teamcode.configuration.Settings.Hardware.MIDDLE;
+import static org.firstinspires.ftc.teamcode.configuration.Settings.Hardware.TURRET;
 
 import android.graphics.Color;
 
@@ -26,6 +27,8 @@ public class System {
 	public Rollers rollers;
 	public Follower follower;
 
+	public Turret turret;
+
 
 	public System(HardwareMap hwMap) {
 		allHubs = hwMap.getAll(LynxModule.class);
@@ -42,9 +45,11 @@ public class System {
 
 		rollers = new Rollers(
 				hwMap.tryGet(DcMotor.class, INTAKE),
-                //Objects.requireNonNull(hwMap.tryGet(DcMotor.class, INTAKE)),
 				hwMap.tryGet(DcMotor.class, MIDDLE),
-				hwMap.tryGet(CRServoImplEx.class, END));
+				hwMap.tryGet(DcMotor.class, END));
+
+		turret = new Turret(hwMap.tryGet(DcMotorEx.class, TURRET));
+
 		setupHubs();
 	}
 

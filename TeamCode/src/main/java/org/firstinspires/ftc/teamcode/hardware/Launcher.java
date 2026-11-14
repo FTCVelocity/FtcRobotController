@@ -15,6 +15,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
  * every method is safe to call and simply does nothing. Once both motors are wired
  * and added to the configuration, it works again with no code change.
  */
+
+
+
 public class Launcher {
 	private static final double VELOCITY_ALPHA = 0.15; // EMA smoothing factor (0-1), lower = more smoothing
 	private final DcMotorEx rightMotor;

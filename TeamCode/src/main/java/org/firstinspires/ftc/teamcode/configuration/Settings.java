@@ -10,12 +10,14 @@ public class Settings {
 		public static double MIDDLE_IN = 1;
 		public static double MIDDLE_STOP = 0;
 		public static double MIDDLE_OUT = -1;
-		public static double END_IN = 1;
+
+		public static double END_IN = 0.8;
 		public static double END_STOP = 0;
-		public static double END_OUT = -1;
+		public static double END_OUT = -0.8;
 	}
 	
 	public static class Hardware {
+		public static String TURRET = "turret";
 		public static String PINPOINT = "pinpoint";
 		public static String LAUNCHER_LEFT = "outtakeleft";
 		public static String LAUNCHER_RIGHT = "outtakeright";
@@ -30,6 +32,12 @@ public class Settings {
 		public static double FAR_VELOCITY = 3600;
 		public static double MAX_SPEED_ERROR = 50;
 		public static double TICKS_PER_REVOLUTION = 28;
+	}
+
+	public static class Turret {
+		public static double SPEED = 0.2;
+		public static int MIN_TICKS = -500;   // tune these
+		public static int MAX_TICKS = 500;
 	}
 	
 	public static class Auto {

@@ -63,6 +63,10 @@ public class TeleOp extends LinearOpMode {
 			// Intake control — use right trigger for intake in, left trigger for reverse
 			system.rollers.setintakePower(gamepad2.right_trigger - gamepad2.left_trigger);
 
+			// Turret: gamepad 2 right stick left/right
+			double turretInput = Math.abs(gamepad2.right_stick_x) < 0.05 ? 0 : gamepad2.right_stick_x;
+			system.turret.setPower(turretInput);
+
 			// Outtake control — press 'A' to run both outtakes, 'B' to reverse
 			// PHASE 1: no launcher on the robot; these calls do nothing until it is installed.
 			// LOW GOAL
@@ -126,6 +130,11 @@ public class TeleOp extends LinearOpMode {
 			if (system.launcher.isInstalled()) {
 				telemetry.addData("Outtake Target", Launcher.ticksPerSecToRPM(system.launcher.targetTPS));
 				telemetry.addData("Outtake Actual", system.launcher.getRPM());
+			}
+			if (system.turret.isInstalled()) {
+				telemetry.addData("Turret Position", system.turret.getPosition());
+			} else {
+				telemetry.addData("Turret", "NOT FOUND");
 			}
 			telemetry.addData("Installed", system.installedSummary());
 			telemetry.addData("Status", "Run Time: " + runtime);

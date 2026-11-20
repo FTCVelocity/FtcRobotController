@@ -1,5 +1,63 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathChain;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.hardware.System;
+
+@Autonomous(name = "Park Auto", group = "Auto")
+public class ParkAuto extends LinearOpMode {
+	// Change these distances (in inches)
+	private static final double FORWARD_INCHES = 2.0;
+	private static final double LEFT_INCHES = 2.0;
+
+	private System system;
+
+	// Drive in a straight line from one pose to another, keeping the same heading
+	private void driveTo(Pose from, Pose to) {
+		PathChain path = system.follower.pathBuilder()
+				.addPath(new BezierLine(from, to))
+				.setConstantHeadingInterpolation(from.getHeading())
+				.build();
+		system.follower.followPath(path);
+		while (opModeIsActive() && system.follower.isBusy()) {
+			system.update();
+		}
+	}
+
+	@Override
+	public void runOpMode() {
+		system = new System(hardwareMap);
+
+		// Start at the origin facing heading 0 (+X is forward, +Y is left)
+		Pose start = new Pose(0, 0, 0);
+		Pose forward = new Pose(FORWARD_INCHES, 0, 0);
+		Pose left = new Pose(FORWARD_INCHES, LEFT_INCHES, 0);
+
+
+		system.follower.setStartingPose(start);
+
+		telemetry.addData("Status", "Ready");
+		telemetry.update();
+		waitForStart();
+
+		driveTo(start, forward);   // go forward
+		driveTo(forward, left);    // then go left
+	}
+}
+
+
+
+
+
+
+
+
+/*package org.firstinspires.ftc.teamcode;
+
 import static org.firstinspires.ftc.teamcode.configuration.Settings.Positions.STORED_POSE;
 
 import com.bylazar.configurables.annotations.Configurable;
@@ -71,7 +129,7 @@ public class ParkAuto extends OpMode {
 	/**
 	 * Mirrors a pose across the field center (x=72)
 	 * X: 144 - x, Heading: π - heading
-	 */
+
 	private static Pose mirrorPose(Pose pose) {
 		return new Pose(
 				144 - pose.getX(),
@@ -131,7 +189,7 @@ public class ParkAuto extends OpMode {
 	 * Launch sequence helper function - handles spinning up, moving to launch,
 	 * waiting for speed, running rollers, and stopping rollers.
 	 * Returns true when launch sequence is complete, false otherwise.
-	 */
+
 	private boolean launch(PathChain launchPath) {
 		switch (launchSubState) {
 			case 0: // Start spinning up launcher and begin path
@@ -252,7 +310,7 @@ public class ParkAuto extends OpMode {
 		/**
 		 * Mirrors a pose across the field center (x=72)
 		 * X: 144 - x, Heading: π - heading
-		 */
+
 		private static Pose mirrorPose(Pose pose) {
 			return new Pose(
 					144 - pose.getX(),
@@ -261,4 +319,4 @@ public class ParkAuto extends OpMode {
 			);
 		}
 	}
-}
+*/

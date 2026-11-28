@@ -4,7 +4,7 @@ import com.pedropathing.geometry.Pose;
 
 public class Settings {
 	public static class Rollers {
-		public static double INTAKE_SPEED = 0.4;
+		public static double INTAKE_SPEED = 0.5;
 		public static double INTAKE_STOP = 0;
 		public static double INTAKE_OUT = -1;
 		public static double MIDDLE_IN = 1;

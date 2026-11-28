@@ -34,7 +34,7 @@ public class TeleOp extends LinearOpMode {
 			system.update();
 
 			// POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-			double axial = -gamepad1.left_stick_y;  // Pushing stick forward gives negative value
+			double axial = gamepad1.left_stick_y;  // Pushing stick forward gives negative value
 			double lateral = gamepad1.left_stick_x;
 			double yaw = -gamepad1.right_stick_x;
 
@@ -100,12 +100,23 @@ public class TeleOp extends LinearOpMode {
 			}
 
 			// Assist roller (third intake roller): configured gamepad, right trigger in, left trigger out
-			Gamepad assistPad = Settings.Controls.ASSIST_GAMEPAD == 2 ? gamepad2 : gamepad1;
-			double assistInput = assistPad.right_trigger - assistPad.left_trigger;
-			if (Math.abs(assistInput) < Settings.Controls.ASSIST_DEADBAND) {
-				assistInput = 0;
+			Gamepad assistPad = gamepad2;
+			double assistInput = 0;
+
+			if (gamepad2.right_bumper) {
+				assistInput = 1;
+			} else if (gamepad2.left_bumper) {
+				assistInput = -1;
 			}
-			system.rollers.setAssistPower(Settings.Controls.ASSIST_INVERT ? -assistInput : assistInput);
+
+			system.rollers.setAssistPower(
+					Settings.Controls.ASSIST_INVERT ? -assistInput : assistInput
+			);
+//			double assistInput = assistPad.right_trigger - assistPad.left_trigger;
+//			if (Math.abs(assistInput) < Settings.Controls.ASSIST_DEADBAND) {
+//				assistInput = 0;
+//			}
+//			system.rollers.setAssistPower(Settings.Controls.ASSIST_INVERT ? -assistInput : assistInput);
 
 			// Telemetry diagnostics
 			telemetry.addData("Pose", system.follower.getPose());

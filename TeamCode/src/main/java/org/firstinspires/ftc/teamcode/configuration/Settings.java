@@ -11,9 +11,9 @@ public class Settings {
 		public static double MIDDLE_STOP = 0;
 		public static double MIDDLE_OUT = -1;
 
-		public static double END_IN = 0.8;
+		public static double END_IN = 1;
 		public static double END_STOP = 0;
-		public static double END_OUT = -0.8;
+		public static double END_OUT = -1;
 
 		public static double ASSIST_SPEED = 1;
 		public static double ASSIST_STOP = 0;
@@ -24,7 +24,7 @@ public class Settings {
 		// Note: gamepad 2 triggers already run the intake, so keep this on 1 unless that changes.
 		public static int ASSIST_GAMEPAD = 1;
 		public static double ASSIST_DEADBAND = 0.05;
-		public static boolean ASSIST_INVERT = false;
+		public static boolean ASSIST_INVERT = true;
 	}
 
 	public static class Hardware {
